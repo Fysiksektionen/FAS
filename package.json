@@ -4,7 +4,8 @@
   "description": "Administrativt system för fysiksektionens nämnder",
   "main": "dist/server.js",
   "scripts": {
-    "build-ts": "npx tsc",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
     "start": "npm run serve",
     "serve": "node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"

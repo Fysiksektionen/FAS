@@ -1,0 +1,21 @@
+name: Easytest
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: # test with different versions of node
+        # matrix properties can have any name and value, it just iterates over all combinations of them
+        # and you can reference them in the template
+        node: [ '10', '12']  
+    name: Node ${{ matrix.node }} sample
+    steps:
+      - uses: actions/checkout@v1  # clone repository
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - run: npm test

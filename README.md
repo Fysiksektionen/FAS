@@ -1,6 +1,8 @@
 # namndadmin
 Web-applikation för att administrera sektionens G Suite
 
+![](https://github.com/Fysiksektionen/namndadmin/workflows/Unittests/badge.svg)
+
 ## Utveckling
 
 Börja med att klona repot

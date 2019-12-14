@@ -23,4 +23,4 @@ Nu körs servern på `http://localhost:3000`.
 
 ### Tester
 
-Kör tester med `npm run test` eller `npm run test-watch` för livekörning när du uppdaterar testkoden.
+Kör tester med `npm test` eller `npm run test-watch` för livekörning när du uppdaterar testkoden.

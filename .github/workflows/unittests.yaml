@@ -24,3 +24,5 @@ jobs:
         working-directory: ${{ matrix.component-to-test }}
       - run: npm test
         working-directory: ${{ matrix.component-to-test }}
+        env:
+          CI: true

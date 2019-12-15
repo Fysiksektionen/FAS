@@ -1,5 +1,5 @@
 {
-  "name": "namndadmin",
+  "name": "FAS",
   "version": "1.0.0",
   "description": "Administrativt system för fysiksektionens nämnder",
   "main": "dist/server.js",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Fysiksektionen/namndadmin.git"
+    "url": "git+https://github.com/Fysiksektionen/FAS.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Fysiksektionen/namndadmin/issues"
+    "url": "https://github.com/Fysiksektionen/FAS/issues"
   },
-  "homepage": "https://github.com/Fysiksektionen/namndadmin#readme",
+  "homepage": "https://github.com/Fysiksektionen/FAS#readme",
   "devDependencies": {
     "@types/express": "^4.17.2",
     "@types/jest": "^24.0.23",

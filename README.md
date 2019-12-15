@@ -9,26 +9,33 @@ Börja med att klona repot
 
 `$ git clone https://github.com/Fysiksektionen/FAS.git`
 
-För att installera alla dependencies så måste du tyvärr just nu köra `npm install` separat i både `client/` och `server/`.
+För att installera alla dependencies så kör du 
 
+`npm run install-project`
 
-### Backend
+För att bygga typescript-filerna i `server/` så används `npm run build-server` i projektets rot-mapp (eller `npm run build-ts` i `server/` mappen). Motsvarande `npm run build-client` finns för att bygga klienten. Kort så kan du bygga båda två med `npm run build` i rot-mappen.
 
-För att köra backend servern så kompileras alla typescript filer genom
+Sedan kan hela appen köras i development mode (frontend uppdateras dynamiskt) genom
 
-`npm run build-ts` (kör `npm run watch-ts` för att bygga medan du skriver kod)
+`npm run dev`
 
-För att köra servern i development mode körs sedan 
+Kör endast `client/` med `npm run client` och endast `server/` med `npm run server`. 
 
-`npm start`
+**VIKTIGT**: Du måste kompilera om ts-filerna för att `server/` ska uppdateras. För att slippa göra detta manuellt hela tiden finns `npm run watch-ts`.
 
-Nu körs servern på `http://localhost:8080`.
+### Exempel
 
-### Frontend
+Se de olika `package.json` filerna för fler tillgängliga scripts.
 
-För att köra frontend react klienten så körs bara `npm start` i mappen `client/`. Nu körs servern på `http://localhost:3000`
+```
+git clone https://github.com/Fysiksektionen/FAS.git
+npm run install-project
+
+# bara servern behöver byggas för att köras i development mode
+npm run build-server
+npm run dev
+```
 
 ### Tester
 
-Kör tester med `npm test` i antingen `client/` eller `server/` beroende på vilka tester du vill köra.
-Se motsvarande `package.json` för att se fler tillgängliga npm scripts.
+Kör testerna med `npm test`. Beroende på vilken mapp du befinner dig i så körs olika tester (närmaste `package.json` bestämmer). Alla tester körs om du är i rot-mappen, annars körs antingen alla `client/` tester eller alla `server/` tester.

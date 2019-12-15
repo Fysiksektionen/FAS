@@ -9,7 +9,10 @@ jobs:
       matrix: # test with different versions of node
         # matrix properties can have any name and value, it just iterates over all combinations of them
         # and you can reference them in the template
-        node: [ '10', '12']  
+        node: [ '10', '12']
+        # right now the procedures to run tests are the same for both client and server,
+        # so might as well run them both via this matrix
+        component-to-test: ['./client', './server']
     name: Node ${{ matrix.node }} sample
     steps:
       - uses: actions/checkout@v1  # clone repository
@@ -18,4 +21,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm install
+        working-directory: ${{ matrix.component-to-test }}
       - run: npm test
+        working-directory: ${{ matrix.component-to-test }}

@@ -6,6 +6,7 @@
   "scripts": {
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
+    "build-client": "npm run build --prefix client",
     "start": "npm run serve",
     "serve": "node dist/server.js",
     "test": "jest",

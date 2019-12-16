@@ -13,7 +13,7 @@ För att installera alla dependencies så kör du
 
 `npm run install-project`
 
-Sedan kan hela appen köras i development mode (frontend uppdateras dynamiskt) genom
+Sedan kan hela appen köras i development mode (kompileras och uppdateras dynamiskt) genom
 
 `npm run dev`
 

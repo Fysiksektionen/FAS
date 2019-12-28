@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import './GroupNode.css';
 
 import { GroupNodeResponse } from '../../../shared/types/GroupNode'

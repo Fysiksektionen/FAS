@@ -1,0 +1,30 @@
+{
+  "name": "fas",
+  "version": "0.1.0",
+  "description": "Web-applikation för att administrera sektionens G Suite",
+  "scripts": {
+    "install-project": "npm install && npm install --prefix server && npm install --prefix client",
+    "server": "npm start --prefix server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\" --names \"server,client\"",
+    "build-server": "npm run build-ts --prefix server",
+    "build-client": "npm run build --prefix client",
+    "build": "npm run build-client && npm run build-server",
+    "test-client": "CI=True npm test --prefix client",
+    "test-server": "npm test --prefix server",
+    "test": "npm run test-server && npm run test-client"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fysiksektionen/FAS.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/Fysiksektionen/FAS/issues"
+  },
+  "homepage": "https://github.com/Fysiksektionen/FAS#readme",
+  "devDependencies": {
+    "concurrently": "^5.0.1",
+    "nodemon": "^2.0.2"
+  }
+}

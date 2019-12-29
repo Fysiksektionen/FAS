@@ -1,0 +1,19 @@
+.background {
+  background-color:#321b36;
+  width: 100vw;
+  height:100vh;
+  position: fixed;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.topContainer {
+  height: 30vh; /* in percent of screen height*/
+  width:100vw;
+}
+
+.bottomContainer {
+  display:flex;
+  justify-content: center;
+  height:100vh;
+}

@@ -1,0 +1,40 @@
+
+.expandButtonContainer {
+  display:flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-left:3px;
+}
+
+.expandButton {
+  cursor: pointer;
+  height: 21px;
+  position: relative;
+  width: 21px;
+  /* border-style:solid;
+  border-width:1px;
+  border-color:#bbbbbb;
+  border-radius: 3px; */
+}
+
+.expandButton:before,
+.expandButton:after {
+  background:#555555;
+  content: '';
+  height: 3px;
+  left: 1;
+  position: absolute;
+  top:9px;
+  width: 21px;
+  transition: transform 300ms ease;
+}
+
+.expandButton:after { /* Start one of the bars at -90 degrees*/
+  transform: rotate(-90deg);
+}
+
+.expandButton.expanded:after,
+.expandButton.expanded:before {
+  /* When expanded both go to -180 degrees forming a minus sign*/
+  transform: rotate(-180deg);  
+}

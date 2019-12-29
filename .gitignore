@@ -1,0 +1,8 @@
+# Ignore built ts files
+dist/
+
+# Dependencies
+node_modules
+
+# Test output 
+coverage/

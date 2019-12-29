@@ -1,0 +1,31 @@
+.groupContainer {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width:40vw;
+}
+  
+@media screen and (max-width : 700px) {
+    .groupContainer {width:95vw;}
+}
+
+.spinloading {
+    border: 8px solid #fafafa;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: spin 1s ease-in-out infinite; /* Safari */
+    animation: spin 1s ease-in-out infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

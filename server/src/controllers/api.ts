@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import {GroupNodeResponse, mockGroupResponse} from '../../../shared/types/GroupNode'
+import { mockGroupResponse } from '../../../shared/types/GroupNode'
 
 /**
  * GET /

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import { GroupNode, getGroups, mockGroupResponse }from './components/GroupNode'
+import { Groups } from './components/Groups'
 
 
 
@@ -12,9 +12,7 @@ const App: React.FC = () => {
 
       </div>
       <div className="bottomContainer">
-        <div className="groupContainer">
-          {mockGroupResponse.map(groupNode => <GroupNode {...groupNode}/>)}
-        </div>
+        <Groups/>
       </div>
     </div>
   );

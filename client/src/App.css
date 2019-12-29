@@ -17,14 +17,3 @@
   justify-content: center;
   height:100vh;
 }
-
-.groupContainer {
-  display: flex;
-  justify-content: flex-start;
-  flex-direction: column;
-  width:40vw;
-}
-
-@media screen and (max-width : 700px) {
-  .groupContainer {width:95vw;}
-}

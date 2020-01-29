@@ -1,29 +1,28 @@
 
 .groupnode {
     background-color: #efefef;
-    /* padding:4px 4px 4px 4px; */
-    margin-left:0px;
-    margin-top:15px;
+    margin-left: 0px;
+    margin-top: 15px;
     min-width: 300px;
     max-width: 500px;
-    min-height:50px;
-    /* border-radius: 5px; */
-    display:flex;
+    min-height: 50px;
+    display: flex;
     justify-content: flex-start;
-    border-radius:3px;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
 .groupname {
-    min-height:100%;
-    max-width:240px;
+    min-height: 100%;
+    max-width: 240px;
     font-size: 24px;
-    display:flex;
+    display: flex;
     flex-direction: column; 
     justify-content: center;
-    overflow:hidden;
-    margin:0;
-    padding-left:0.2em;
-    padding-right:0.2em;
-    padding-top:0;
-    padding-bottom:0;
+    overflow: hidden;
+    margin: 0;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    padding-top: 0;
+    padding-bottom: 0;
 }

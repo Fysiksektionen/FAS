@@ -12,7 +12,7 @@ export const GroupNode: React.FC<GroupNodeResponse> = (props: GroupNodeResponse)
     const childrenArray = props.children ? props.children : []
     return (
         <div>
-            <li className="groupnode">
+            <li className="groupnode" onClick={() => {setExpanded(!expanded)}}>
                 <ExpandButton expanded={expanded} callback={() => setExpanded(!expanded)}/>
                 <div className="groupname">{props.name}</div>
             </li>

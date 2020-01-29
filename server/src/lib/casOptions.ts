@@ -29,7 +29,7 @@ export const CASOptionsDev: CASOptionsType = {
 // Production options
 export const CASOptionsPro: CASOptionsType = {
     cas_url:"https://login.kth.se",
-    service_url: "http://localhost:8080",
+    service_url: "https://f.kth.se/fas",
     cas_version: '3.0',
     renew: false,
     is_dev_mode: false,

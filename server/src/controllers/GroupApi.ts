@@ -4,7 +4,7 @@ import as from './asyncUtil';
 import '../../../shared/types/common';
 import { basicDict } from '../../../shared/types/common';
 
-class GroupApi extends admin_directory_v1.Admin {
+export class GroupApi extends admin_directory_v1.Admin {
     
     private Cgroups: {[idx: string]: admin_directory_v1.Schema$Group};
     private Cmembers: {[idx: string]: admin_directory_v1.Schema$Member};

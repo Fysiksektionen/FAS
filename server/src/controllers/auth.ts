@@ -1,5 +1,5 @@
 const CASAuthentication = require('../lib/CASAuth')
-import { CASOptionsType } from '../lib/casOptions';
+import { CASOptionsType } from '../lib/CASOptions';
 
 
 /* CAS Authentication functions

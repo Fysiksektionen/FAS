@@ -8,7 +8,7 @@ import session from "express-session"
 import * as apiController from "./controllers/api"
 
 import CAS from "./controllers/auth"
-import { CASOptionsDev, CASOptionsPro} from "./lib/casOptions"
+import { CASOptionsDev, CASOptionsPro} from "./lib/CASOptions"
 
 
 /* Session store */

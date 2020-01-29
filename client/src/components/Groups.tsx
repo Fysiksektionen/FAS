@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { APIService } from '../../../shared/APIService'
+import { APIService } from '../../../shared/types/APIService'
 import { GroupNodeResponse } from '../../../shared/types/GroupNode'
 import { GroupNode } from './GroupNode'
 import './Groups.css'

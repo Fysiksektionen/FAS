@@ -4,15 +4,12 @@
   top: 0;
   left: 0;
   z-index: 1;
-
   background-color:#A0A0A0;
   color: white;
   transition: 0.5s;
-
   overflow-x: hidden;
   white-space: nowrap;
 }
-
 .sidenav h2 {
   cursor: pointer;
   transition: 0.3s;
@@ -24,6 +21,10 @@
   padding: 8px 8px 8px 32px;
   font-size: 17px;
 }
+a {
+  color: inherit; 
+  text-decoration: none;
+}
 .sidenav-item:hover {
   background-color:#909090
 }
@@ -32,10 +33,6 @@
   height: 24px;
   width: 24px;
   padding-right: 32px;
-}
-
-.btn-close {
-  cursor: pointer;
 }
 
 

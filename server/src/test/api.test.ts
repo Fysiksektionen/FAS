@@ -19,9 +19,9 @@ function checkGroupResponse(groupNode:any){
 
 
 describe("GET /api/groups", () => {
-    it("should return 200 OK", () => {
-        return request(app).get("/api/groups")
-            .expect(200)
+    it("should return 200 OK", async () => {
+        const result = await request(app).get("/api/groups")
+        expect(result.status).toEqual(200)
     })
     it("should return json", async () => { 
         // example test of content. Check out supertest and jest for documentation.

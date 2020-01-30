@@ -7,7 +7,7 @@
     "watch-ts": "tsc -w",
     "start": "concurrently \"npm run watch-ts\" \"npm run serve\" --names \"compilation,server\"",
     "serve": "nodemon dist/server/src/server.js",
-    "test": "jest",
+    "test": "NODE_ENV=testing jest",
     "test-verbose": "jest --coverage --verbose",
     "test-watch": "npm run test -- --watchAll"
   },
@@ -39,6 +39,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "mongoose": "^5.8.10",
     "xml2js": "^0.4.23"
   }
 }

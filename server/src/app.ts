@@ -19,8 +19,12 @@ app.set("port", process.env.PORT || 8080)
 
 /* Session store */
 let store;
-if (app.get("env") !== 'testing') {
-    // Use database connection when not testing.
+if (app.get("env") === 'testing' || process.env.FAS_USE_DEV_MEMSTORE === 'true') {
+    // Memorystore for testing environment to avoid mongodb connections
+    // NOTE: NOT suitable for production.
+    store = new MemoryStore()
+}
+else { // Use real database connection when not testing.
     app.set("mongourl", "mongodb://localhost:27017/FAS")
     mongoose.promise = Promise
     mongoose.connect(
@@ -32,11 +36,6 @@ if (app.get("env") !== 'testing') {
         // cleanup than using url: app.get("mongourl")
         mongooseConnection: mongoose.connection
     });
-}
-else {
-    // Memorystore for testing environment to avoid mongodb connections
-    // not suitable for production.
-    store = new MemoryStore()
 }
 
 /* Set up a session store, exposes req.session. */

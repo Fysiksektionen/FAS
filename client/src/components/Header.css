@@ -1,17 +1,16 @@
 .header {
+    top: 0;
     width: 100%;
-    height: 10vh;
-    background: #FF642b;
-    color: white;
+    background-color: var(--color-font-light);
+    border-bottom: 1px solid var(--color-surface-dark);
+    box-shadow: 0 0 7px 0 var(--color-surface-dark);
   }
 .title {
-    margin: 0px 32px 0px 32px;
+    padding: 8px 32px 8px 48px;
     font-size: 36px;
 }
-.title img {
+.title h3 {
   cursor: pointer;
-  float: left;
-  height: auto;
-  width: auto;
-  padding-right: 32px;
+  margin: 0;
+  color: var(--color-orange);
 }

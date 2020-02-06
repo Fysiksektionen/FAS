@@ -4,17 +4,20 @@
   top: 0;
   left: 0;
   z-index: 1;
-  background-color:#A0A0A0;
-  color: white;
+  background-color: var(--color-surface-dark);
+  color: var(--color-font-light);
   transition: 0.5s;
   overflow-x: hidden;
   white-space: nowrap;
 }
-.sidenav h2 {
+h2 {
   cursor: pointer;
   transition: 0.3s;
   padding: 8px 32px 8px 32px;
   text-align: center;
+}
+p {
+  padding-left: 32px;
 }
 .sidenav-item {
   cursor: pointer;
@@ -26,7 +29,7 @@ a {
   text-decoration: none;
 }
 .sidenav-item:hover {
-  background-color:#909090
+  background-color: var(--color-font-light-hover);
 }
 .sidenav-item img {
   float: left;

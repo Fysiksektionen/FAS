@@ -1,19 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Libre+Franklin&display=swap');
+
+:root {
+  --color-font-light: #f0f0f0;
+  --color-font-light-hover: #808080;
+  --color-surface-dark: #313539;
+  --color-font-dark: black;
+  --color-orange: #ff642b;
+}
+
 .background {
-  background-color:#24305E;
+  background-color: white;
   width: 100vw;
   height: 100vh;
   position: fixed;
   overflow-y: scroll;
   overflow-x: hidden;
+  font-family: 'Libre Franklin', sans-serif;
 }
 
-.topContainer {
-  height: 30vh;
-  width: 100vw;
-  background-color: #24305E;
-}
-
-.bottomContainer {
+.content {
   display: flex;
   justify-content: center;
   height: 100vh;

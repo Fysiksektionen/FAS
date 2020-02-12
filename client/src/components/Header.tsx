@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Header.css';
 
 type HeaderProps = {
@@ -9,8 +9,7 @@ const Header : React.FC<HeaderProps> = (props: HeaderProps) => {
     return (
         <div className="header">
             <div className="title">
-                <img src={process.env.PUBLIC_URL + '/icon_list64.png'}
-                     onClick={() => props.expandSidenav()}></img>
+                <h3 onClick={() => props.expandSidenav()}>FAS</h3>
             </div>
         </div>
     )

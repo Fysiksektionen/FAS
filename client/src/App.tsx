@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
 import Groups from './components/Groups';
 import Header from './components/Header';
 import Sidenav from './components/Sidenav';
+import GraphView from './components/GraphView'
 
 const ListView: React.FC = () => {
   return (
-      <div className="bottomContainer">
+      <div className="content">
         <Groups/>
       </div>
-  );
-}
-const Login: React.FC = () => {
-  return (
-    <h1>DU MÅSTE LOGGA IN</h1>
   );
 }
 
@@ -27,10 +23,11 @@ const App: React.FC = () => {
       <div className="background">
         <Header expandSidenav={() => setSidenavExpanded(!sidenavExpanded)}/>
         <Sidenav expanded={sidenavExpanded} callback={() => setSidenavExpanded(!sidenavExpanded)}/>
-
+        
+        
         <Switch>
           <Route exact path="/listview" component={ListView} /> 
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/graphview" component={GraphView} />
         </Switch>
 
       </div>

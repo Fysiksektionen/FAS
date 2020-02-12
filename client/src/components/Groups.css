@@ -10,16 +10,15 @@
 }
 
 .spinloading {
-    border: 8px solid #fafafa;
+    border: 8px solid var(--color-font-light);
     border-radius: 50%;
     border-top: 8px solid #3498db;
     width: 60px;
     height: 60px;
-    -webkit-animation: spin 1s ease-in-out infinite; /* Safari */
+    -webkit-animation: spin 1s ease-in-out infinite;
     animation: spin 1s ease-in-out infinite;
 }
 
-/* Safari */
 @-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }

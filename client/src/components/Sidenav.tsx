@@ -1,50 +1,72 @@
 import React from 'react';
 import './Sidenav.css';
 
-type SidenavProps = {
+type Props = {
     expanded: boolean,
     callback: Function
 }
+type State = {
+    name: String,
+    version: String
+}
 
-const Sidenav : React.FC<SidenavProps> = (props: SidenavProps) => {
+class Sidenav extends React.Component<Props, State> {
+
+    componentDidMount() {
+        
+        const baseURI = process.env.FAS_BASE_URI || "http://localhost:8080"
+        const resourceUrl = baseURI + '/api/me'
+        fetch(resourceUrl)
+            .then(results => results.json())
+            .then(data => {this.setState(data)})
+    }
+    
+    render() {
     return (
-        <div className="sidenav" style={props.expanded ? {width: "250px"} : {width: "0px"}}> 
-                <h2 onClick={() => {props.callback()}}>Meny</h2>
+        <div className="sidenav" style={this.props.expanded ? {width: "250px"} : {width: "0px"}}> 
+                
+                <h2 onClick={() => {if (this.props.callback) {this.props.callback()}}}>Meny</h2>
+                <p>Användare: {this.state?.name}</p>
+
                 <hr></hr>
                 <a href="/users">
                     <div className="sidenav-item">
-                        <img src={process.env.PUBLIC_URL + '/icon_user64.png'}></img>
+                        <img src={process.env.PUBLIC_URL + '/icon_user64.png'} alt=""></img>
                         Användare                
                     </div>
                 </a>  
                 <a href="/groups">
                     <div className="sidenav-item">
-                        <img src={process.env.PUBLIC_URL + '/icon_group64.png'}></img>
+                        <img src={process.env.PUBLIC_URL + '/icon_group64.png'} alt=""></img>
                         Grupper
                     </div>
                 </a>
                 <hr></hr>
                 <a href="/listview">
                     <div className="sidenav-item">
-                        <img src={process.env.PUBLIC_URL + '/icon_list64.png'}></img>
+                        <img src={process.env.PUBLIC_URL + '/icon_list64.png'} alt=""></img>
                         Listvy
                     </div>
                 </a>
                 <a href="/graphview">
                     <div className="sidenav-item">
-                        <img src={process.env.PUBLIC_URL + '/icon_node64.png'}></img>
+                        <img src={process.env.PUBLIC_URL + '/icon_node64.png'} alt=""></img>
                         Trädvy
                     </div>
                 </a>
                 <hr></hr>
                 <a href="/logout">
                     <div className="sidenav-item">
-                        <img src={process.env.PUBLIC_URL + '/icon_exit64.png'}></img>
+                        <img src={process.env.PUBLIC_URL + '/icon_exit64.png'} alt=""></img>
                         Logga ut
                     </div>
                 </a>
+
+                <p style={{bottom: 0, position: "absolute"}}>FAS v. {this.state?.version}</p>
+                <p style={{bottom: 20, position: "absolute"}}>By F.dev</p>
         </div>
     )
+    }
 }
 
 export default Sidenav;

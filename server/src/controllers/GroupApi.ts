@@ -1,10 +1,9 @@
 
 import { admin_directory_v1 } from 'googleapis';
-import as from './asyncUtil';
-import '../../../shared/types/common';
+import { as } from './asyncUtil';
 import { basicDict } from '../../../shared/types/common';
 
-export class GroupApi extends admin_directory_v1.Admin {
+export default class GroupApi extends admin_directory_v1.Admin {
     
     private Cgroups: {[idx: string]: admin_directory_v1.Schema$Group};
     private Cmembers: {[idx: string]: admin_directory_v1.Schema$Member};
@@ -15,14 +14,14 @@ export class GroupApi extends admin_directory_v1.Admin {
     private readonly idxPropG = 'id'; // id or name
     private readonly idxPropM = 'id'; // id or email
 
-    constructor(public domain: string, opts: admin_directory_v1.Options) {
+    constructor(public domain: string, opts: Partial<admin_directory_v1.Options>) {
         //const admin = google.admin("directory_v1");
-        super(opts);
+        super({version: 'directory_v1', ...opts});
         this.Cgroups = {};
         this.Cmembers = {};
     }
 
-    public async listGroups(opts: basicDict = {}): Promise<admin_directory_v1.Schema$Group[]> {
+    public async listGroups(opts?: basicDict): Promise<admin_directory_v1.Schema$Group[]> {
         opts = {...this.def, ...opts};
 
         const [err, res] = await as(this.groups.list(opts));
@@ -40,7 +39,7 @@ export class GroupApi extends admin_directory_v1.Admin {
         return groups;
     }
 
-    public async getGroup(groupKey: string, opts: basicDict = {}) {
+    public async getGroup(groupKey: string, opts?: basicDict) {
         opts = {...this.def, ...opts, groupKey};
 
         const [err, res] = await as(this.groups.get(opts));
@@ -50,7 +49,7 @@ export class GroupApi extends admin_directory_v1.Admin {
         return group;
     }
 
-    public async listMembers(groupKey: string, opts: basicDict = {}): Promise<admin_directory_v1.Schema$Member[]> {
+    public async listMembers(groupKey: string, opts?: basicDict): Promise<admin_directory_v1.Schema$Member[]> {
         opts = {...this.def, ...opts, groupKey};
 
         const [err, res] = await as(this.members.list(opts));
@@ -68,14 +67,14 @@ export class GroupApi extends admin_directory_v1.Admin {
         return members;
     }
 
-    public async getSubGroups(groupKey: string, opts: basicDict = {}) {
+    public async getSubGroups(groupKey: string, opts?: basicDict) {
         const [err, res] = await as(this.listMembers(groupKey, opts));
         if (err) return Promise.reject(err);
 
         return res.filter((member) => member.type === 'GROUP');
     }
 
-    public async getUsers(groupKey: string, opts: basicDict = {}) {
+    public async getUsers(groupKey: string, opts?: basicDict) {
         const [err, res] = await as(this.listMembers(groupKey, opts));
         if (err) return Promise.reject(err);
 

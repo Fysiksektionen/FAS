@@ -6,3 +6,5 @@ node_modules
 
 # Test output 
 coverage/
+
+service_account.json

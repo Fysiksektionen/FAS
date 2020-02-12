@@ -231,6 +231,10 @@ CASAuthentication.prototype._handle = function(req: Request, res: Response, next
             next();
         }
     }
+    // If the authentication type is BLOCK, simply send a 401 response.
+    else if (authType === AUTH_TYPE.BLOCK) {
+        res.status(401).json({ok:false,message:"Unauthorized, please log in"});
+    }
     // If dev mode is active, set the CAS user to the specified dev user.
     else if (this.is_dev_mode) {
         const username = this.dev_mode_user
@@ -239,7 +243,7 @@ CASAuthentication.prototype._handle = function(req: Request, res: Response, next
         
         // If this is a bounce redirect, redirect the authenticated user.
         const next_step = () => authType === AUTH_TYPE.BOUNCE_REDIRECT 
-            ? res.redirect(req.query.returnTo)
+            ? res.redirect(req.query.returnTo || this.service_url)
             : next() // Otherwise, allow them through to their request.
         
         // Create a user if first time login.
@@ -247,10 +251,6 @@ CASAuthentication.prototype._handle = function(req: Request, res: Response, next
         // User.findOne({username}).then(user => 
         //     user ? next_step() : User.create({username, info:this.dev_mode_info}).then(next_step)
         // )
-    }
-    // If the authentication type is BLOCK, simply send a 401 response.
-    else if (authType === AUTH_TYPE.BLOCK) {
-        res.status(401).json({ok:false,message:"Unauthorized, please log in"});
     }
     // If there is a CAS ticket in the query string, validate it with the CAS server.
     else if (req.query && req.query.ticket) {

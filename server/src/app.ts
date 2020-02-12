@@ -52,25 +52,34 @@ app.use( session({
 app.use(bodyParser.json())
 
 let casAuth; // initialise depending on environment below
-if (app.get("env") !== 'production') { 
-    // app.get("env") reads the NODE_ENV environment 
-    // variable, uses 'development' if not found
-    const corsOptions = {
-        origin: 'http://localhost:3000',  // react frontend during development
-        optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-    }
-    app.use(cors(corsOptions))
-    casAuth = CAS(CASOptionsDev) // development settings
-}
-else{
-    casAuth = CAS(CASOptionsPro) // production settings
+
+switch (app.get("env")){
+    case "production":
+        casAuth = CAS(CASOptionsPro) // production settings
+        break
+    case "testing":
+        casAuth = CAS(CASOptionsDev) // development settings
+        // this route is for testing
+        app.get("/block_unauthorized", casAuth.block, (req,res)=>res.send("Your request was not blocked"))
+        break
+    default: // development
+        const corsOptions = {
+            origin: 'http://localhost:3000',  // react frontend during development
+            optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+        }
+        app.use(cors(corsOptions))
+        casAuth = CAS(CASOptionsDev) // development settings
+        break
 }
 
 /* API routes */
-app.get("/api/groups", apiController.getGroups)
+app.get("/api/groups", casAuth.block, apiController.getGroups)
+app.get("/api/me",  casAuth.block, (req,res) => res.json({name:req.session['cas_user']}))
 
 /* Other routes */
-// just to test
-app.get("/", casAuth.bounce, (req,res) => res.json({name:req.session['cas_user']}))
+app.get("/login", casAuth.bounce_redirect) // requires 
+app.get("/logout", casAuth.logout)
+app.get("/", casAuth.bounce, (req,res) => res.send("Temporary homepage"))
+
 
 export default app

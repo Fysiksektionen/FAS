@@ -24,7 +24,6 @@ const useGetGroupAPI = () => {
     return result
 }
 
-
 export const Groups: React.FC = () => {
     const service = useGetGroupAPI();
     return (

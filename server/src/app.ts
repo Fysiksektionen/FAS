@@ -73,8 +73,9 @@ switch (app.get("env")){
 }
 
 /* API routes */
-app.get("/api/groups", casAuth.block, apiController.getGroups)
-app.get("/api/me",  casAuth.block, (req,res) => res.json({name:req.session['cas_user']}))
+app.use("/api/", casAuth.block)  // middleware to block every unauthorized api request
+app.get("/api/groups", apiController.getGroups)
+app.get("/api/me", (req,res) => res.json({name:req.session['cas_user']}))
 
 /* Other routes */
 app.get("/login", casAuth.bounce_redirect) // requires 

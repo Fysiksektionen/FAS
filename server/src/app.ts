@@ -1,5 +1,6 @@
 import express from "express"
 import session, { MemoryStore } from "express-session"
+import path from "path"
 
 const mongoose = require("mongoose")
 const MongoStore = require('connect-mongo')(session)
@@ -56,6 +57,11 @@ let casAuth; // initialise depending on environment below
 switch (app.get("env")){
     case "production":
         casAuth = CAS(CASOptionsPro) // production settings
+        // In production it is run in /server/dist/server/src/server.js, so go back 4 dirs.
+        // for consistency the FAS_ROOT_DIR env var should be set to the absolute path of client/build.
+        const FAS_ROOT_DIR = process.env.FAS_ROOT_DIR || path.join(__dirname, '../../../../')
+        app.set('static_folder', path.join(FAS_ROOT_DIR, 'client/build'))
+        app.use('/', express.static(app.get('static_folder')))
         break
     case "testing":
         casAuth = CAS(CASOptionsDev) // development settings

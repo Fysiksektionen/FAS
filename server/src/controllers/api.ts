@@ -7,17 +7,18 @@ import { as } from './asyncUtil'
 
 const groupApi = new GroupApi('fysiksektionen.se', {auth});
 
-/**
- * GET /
- * Returns a simple mock group response
- */
-
-
 export const getGroups = async(req: Request, res: Response) => {
-    // return mock response for now since we dont have any model/db in place.
-    //res.json(mockGroupResponse)
     const [err, groups] = await as(groupApi.listGroups())
     console.log(err)
     res.json(groups);
+}
+
+export const getUsers = async(req: Request, res: Response) => {
     
+}
+
+export const getMap = async(req: Request, res: Response) => {
+    const [err, map] = await as(groupApi.getMap())
+    console.log(err)
+    res.json(map);
 }

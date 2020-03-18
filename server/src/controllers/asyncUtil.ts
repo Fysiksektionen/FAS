@@ -8,13 +8,13 @@ export async function as<T>(promise: Promise<T>): Promise<[null, T] | [object, u
 }
 
 // USE AT YOUR OWN RISK
-export function hang<T>(promise: Promise<T>): T {
+export function hang<T>(promise: Promise<T>): [null, T] | [object, undefined] {
     let res, completed = false;
     promise.then((val: T) => {
-        res = val;
+        res = [null, val];
         completed = true;
     }, (err) => {
-        res = err;
+        res = [err, undefined];
         completed = true;
     });
     while (!completed) {

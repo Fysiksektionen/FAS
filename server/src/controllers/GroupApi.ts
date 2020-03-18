@@ -2,26 +2,53 @@
 import { admin_directory_v1 } from 'googleapis';
 import { as } from './asyncUtil';
 import { basicDict } from '../../../shared/types/common';
+import Graph from './Graph';
+
+type cGroup = admin_directory_v1.Schema$Group & {
+    subGroups?: string[];
+    users?: string[];
+}
+type cUser = admin_directory_v1.Schema$Member
 
 export default class GroupApi extends admin_directory_v1.Admin {
     
-    private Cgroups: {[idx: string]: admin_directory_v1.Schema$Group};
-    private Cmembers: {[idx: string]: admin_directory_v1.Schema$Member};
+    private Cgroups: {[id: string]: cGroup};
+    private Cusers: {[id: string]: cUser};
     private readonly def = {
         domain: this.domain,
         maxResults: 200,
     };
-    private readonly idxPropG = 'id'; // id or name
-    private readonly idxPropM = 'id'; // id or email
 
     constructor(public domain: string, opts: Partial<admin_directory_v1.Options>) {
         //const admin = google.admin("directory_v1");
         super({version: 'directory_v1', ...opts});
         this.Cgroups = {};
-        this.Cmembers = {};
+        this.Cusers = {};
     }
 
-    public async listGroups(opts?: basicDict): Promise<admin_directory_v1.Schema$Group[]> {
+    public async getMap(opts?: basicDict) {
+        opts = {...this.def, ...opts};
+
+        const [err, groups] = await as(this.listGroups(opts));
+        if (err) return Promise.reject(err);
+
+        const memberPromises = groups.map(group => {
+            this.getSubGroups(group.id).then(subGroups => 
+                group.subGroups = subGroups.map(subGroup => subGroup.id)
+            );
+            this.getUsers(group.id).then(users => 
+                group.users = users.map(user => user.id)
+            );
+        });
+        const [err2, ] = await as(Promise.all(memberPromises));
+        if (err2) return Promise.reject(err2);
+        return {
+            groups: this.Cgroups,
+            users: {} // Add if needed
+        };
+    }
+
+    public async listGroups(opts?: basicDict): Promise<cGroup[]> {
         opts = {...this.def, ...opts};
 
         const [err, res] = await as(this.groups.list(opts));
@@ -29,7 +56,7 @@ export default class GroupApi extends admin_directory_v1.Admin {
 
         const groups = res.data.groups;
         for (const group of groups) {
-            this.Cgroups[group[this.idxPropG]] = group;
+            this.Cgroups[group.id] = group;
         }
         if (res.data.nextPageToken) {
             const [err, nextGroups] = await as(this.listGroups({...opts, pageToken: res.data.nextPageToken}));
@@ -45,7 +72,7 @@ export default class GroupApi extends admin_directory_v1.Admin {
         const [err, res] = await as(this.groups.get(opts));
         if (err) return Promise.reject(err);
         const group = res.data;
-        this.Cgroups[group[this.idxPropG]] = group;
+        this.Cgroups[group.id] = group;
         return group;
     }
 
@@ -56,9 +83,7 @@ export default class GroupApi extends admin_directory_v1.Admin {
         if (err) return Promise.reject(err);
 
         const members = res.data.members;
-        for (const member of members) {
-            this.Cmembers[member[this.idxPropM]] = member;
-        }
+        
         if (res.data.nextPageToken) {
             const [err, nextMembers] = await as(this.listMembers(groupKey, {...opts, pageToken: res.data.nextPageToken}));
             if (err) return Promise.reject(err);
@@ -78,7 +103,11 @@ export default class GroupApi extends admin_directory_v1.Admin {
         const [err, res] = await as(this.listMembers(groupKey, opts));
         if (err) return Promise.reject(err);
 
-        return res.filter((member) => member.type === 'USER');
+        const users = res.filter((member) => member.type === 'USER');
+        for (const user of users) {
+            this.Cusers[user.id] = user;
+        }
+        return users;
     }
 
 }

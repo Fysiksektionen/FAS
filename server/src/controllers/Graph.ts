@@ -8,43 +8,30 @@ export default class Graph {
 
     constructor(
         private readonly directed = true,
-        public graphAttrs?: basicDict,
-        public nodeAttrs?: basicDict,
-        public edgeAttrs?: basicDict
     ) {}
 
-    public addNode(id: string, value?: any, attrs?: basicDict) {
-        attrs = {...this.nodeAttrs, ...attrs};
-        return this.nodes[id] = new Node(id, value, attrs);
+    public clear() {
+        this.nodes = {};
+        this.edges = {};
     }
 
-    public addEdge(node1Id: string, node2Id: string, id = `${node1Id} - ${node2Id}`, attrs?: basicDict) {
-        attrs = {...this.edgeAttrs, ...attrs};
+    public addNode(id: string, attrs?: basicDict) {
+        return this.nodes[id] = attrs;
+    }
+
+    public addEdge(node1Id: string, node2Id: string, id = `${node1Id} - ${node2Id}`) {
         const node1 = this.nodes[node1Id];
         const node2 = this.nodes[node2Id];
-        if (!node1 || ! node2) return null;
-        return this.edges[id] = new Edge(id, node1, node2, attrs);
+        if (!node1 || !node2) return null;
+        return this.edges[id] = {id, node1, node2};
     }
 
 }
 
-class Node {
+type Node = basicDict
 
-    constructor(
-        public readonly id: string,
-        public value: any,
-        public attrs?: basicDict
-    ) {}
-
-}
-
-class Edge {
-
-    constructor(
-        public readonly id: string,
-        public node1: Node,
-        public node2: Node,
-        public attrs?: basicDict
-    ) {}
-
+type Edge = basicDict & {
+    id: string;
+    node1: Node;
+    node2: Node;
 }

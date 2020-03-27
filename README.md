@@ -35,6 +35,17 @@ npm run install-project
 npm run dev
 ```
 
+### Production
+
+För att köra production lokalt (med inloggning) så borde du först köra `npm run build-client` för att uppdatera `client/build`.
+Kör sedan följande kommando för att hosta servern med react-frontend på `http://localhost:8080`:
+
+`npm run staging`
+
+För den faktiska production-miljön med inloggning mot login.kth.se så körs
+
+`npm run pro`
+
 ### Tester
 
 Kör testerna med `npm test`. Beroende på vilken mapp du befinner dig i så körs olika tester (närmaste `package.json` bestämmer). Alla tester körs om du är i rot-mappen, annars körs antingen alla `client/` tester eller alla `server/` tester.

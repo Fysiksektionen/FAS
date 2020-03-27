@@ -7,9 +7,11 @@
     "server": "npm start --prefix server",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\" --names \"server,client\"",
-    "build-server": "npm run build-ts --prefix server",
+    "pro": "NODE_ENV=production npm run server",
+    "staging": "NODE_ENV=staging npm run server",
+    "compile-server": "npm run compile-ts --prefix server",
     "build-client": "npm run build --prefix client",
-    "build": "npm run build-client && npm run build-server",
+    "build": "npm run build-client && npm run compile-server",
     "test-client": "CI=True npm test --prefix client",
     "test-server": "npm test --prefix server",
     "test": "npm run test-server && npm run test-client"

@@ -26,7 +26,7 @@ function checkGroupResponse(groupNode:any){
 async function getAuthedSession() {
     const sess = session(app)
     // route "/" redirects users to login, in dev/test mode this is done automatically
-    await sess.get("/").expect(200)
+    await sess.get("/login").expect(302)
     return sess
 }
 

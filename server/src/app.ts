@@ -104,4 +104,6 @@ if (["production", "staging"].includes(app.get("env"))){
 }
 
 
+app.get("/api/map", apiController.getMap)
+
 export default app

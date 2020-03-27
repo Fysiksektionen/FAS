@@ -9,6 +9,7 @@
         "sourceMap": true, // We want source maps to be output along side our JavaScript. 
         "outDir": "dist", // Location to output .js files after compilation
         "baseUrl": ".", // Part of configuring module resolution.
+        "resolveJsonModule": true, // Bring service_account to dist
         "paths": { // Part of configuring module resolution.
             "*": [
                 "node_modules/*",
@@ -16,6 +17,7 @@
         }
     },
     "include": [ // files to be compiled when this tsconfig file is referenced.
-        "src/**/*"
+        "src/**/*",
+        "src/service_account.json"
     ]
 }

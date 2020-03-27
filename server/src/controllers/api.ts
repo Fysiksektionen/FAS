@@ -9,7 +9,7 @@ const groupApi = new GroupApi('fysiksektionen.se', {auth});
 
 export const getGroups = async(req: Request, res: Response) => {
     const [err, groups] = await as(groupApi.listGroups())
-    console.log(err)
+    if (err) console.log(err)
     res.json(groups);
 }
 
@@ -19,6 +19,6 @@ export const getUsers = async(req: Request, res: Response) => {
 
 export const getMap = async(req: Request, res: Response) => {
     const [err, map] = await as(groupApi.getMap())
-    console.log(err)
+    if (err) console.log(err)
     res.json(map);
 }

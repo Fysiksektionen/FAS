@@ -9,6 +9,11 @@ Börja med att klona repot
 
 `$ git clone https://github.com/Fysiksektionen/FAS.git`
 
+Appen antar att du kör en mongo-databas på `mongodb://localhost:27017/`. Om du inte orkar installera mongodb
+ så kan du köra följande kommando för att istället lagra saker i minnet. Detta är bara för att snabbt prototypa och ska inte köras i production.
+
+ `$ export FAS_USE_DEV_MEMSTORE=true`
+
 För att installera alla dependencies så kör du 
 
 `npm run install-project`
@@ -29,6 +34,17 @@ npm run install-project
 
 npm run dev
 ```
+
+### Production
+
+För att köra production lokalt (med inloggning) så borde du först köra `npm run build-client` för att uppdatera `client/build`.
+Kör sedan följande kommando för att hosta servern med react-frontend på `http://localhost:8080`:
+
+`npm run staging`
+
+För den faktiska production-miljön med inloggning mot login.kth.se så körs
+
+`npm run pro`
 
 ### Tester
 

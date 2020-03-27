@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './ExpandButton.css';
 
 
@@ -6,6 +6,8 @@ export type ButtonProps = {
     expanded: Boolean,
     callback?: Function
 }
+
+
 
 const ExpandButton : React.FC<ButtonProps> = (props: ButtonProps) => {
     return (

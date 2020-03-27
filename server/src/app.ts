@@ -17,6 +17,6 @@ app.set("port", process.env.PORT || 8080)
 
 app.get("/api/groups", apiController.getGroups)
 
-app.get("/api/groups", apiController.getMap)
+app.get("/api/map", apiController.getMap)
 
 export default app

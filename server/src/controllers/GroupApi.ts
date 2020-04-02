@@ -32,16 +32,14 @@ export default class GroupApi extends admin_directory_v1.Admin {
         const [err, groups] = await as(this.listGroups(opts));
         if (err) return Promise.reject(err);
 
-        const memberPromises = groups.map(group => {
-            this.getSubGroups(group.id).then(subGroups => 
-                group.subGroups = subGroups.map(subGroup => subGroup.id)
-            );
-            this.getUsers(group.id).then(users => 
-                group.users = users.map(user => user.id)
-            );
+        const memberPromises = groups.map(async group => {
+            const [err2, members] = await as(this.listMembers(group.id));
+            if (err2) Promise.reject(err2);
+            group.subGroups = members.filter(member => member.type === 'GROUP').map(subGroup => subGroup.id);
+            group.users = members.filter(member => member.type === 'USER').map(user => user.id);
         });
-        const [err2, ] = await as(Promise.all(memberPromises));
-        if (err2) return Promise.reject(err2);
+        const [errAll, ] = await as(Promise.all(memberPromises));
+        if (errAll) return Promise.reject(errAll);
         return {
             groups: this.Cgroups,
             users: {} // Add if needed

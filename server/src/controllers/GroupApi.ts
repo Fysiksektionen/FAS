@@ -34,7 +34,7 @@ export default class GroupApi extends admin_directory_v1.Admin {
 
         const memberPromises = groups.map(async group => {
             const [err2, members] = await as(this.listMembers(group.id));
-            if (err2) Promise.reject(err2);
+            if (err2) return Promise.reject(err2);
             group.subGroups = members.filter(member => member.type === 'GROUP').map(subGroup => subGroup.id);
             group.users = members.filter(member => member.type === 'USER').map(user => user.id);
         });

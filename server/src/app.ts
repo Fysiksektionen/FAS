@@ -81,6 +81,7 @@ switch (app.get("env")){
 /* API routes */
 app.use("/api/", casAuth.block)  // middleware to block every unauthorized api request
 app.get("/api/groups", apiController.getGroups)
+app.get("/api/map", apiController.getMap)
 app.get("/api/me", (req,res) => res.json({name:req.session['cas_user']}))
 
 /* Other routes */
@@ -102,8 +103,5 @@ if (["production", "staging"].includes(app.get("env"))){
         res.sendFile('index.html', {root: path.join(FAS_ROOT_DIR, 'client/build/')});
     })
 }
-
-
-app.get("/api/map", apiController.getMap)
 
 export default app

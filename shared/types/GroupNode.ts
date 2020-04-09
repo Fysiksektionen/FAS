@@ -1,10 +1,14 @@
 
 export interface GroupNodeResponse {
-    name: String,
+    name: string,
     children?: GroupNodeResponse[]
 }
 
-
-// for testing
-export const mockFdevGroup : GroupNodeResponse =  {name:"F.dev"}
-export const mockGroupResponse : GroupNodeResponse[] = [{name:"Fcom",children:[mockFdevGroup]}, {name:"FKM"}]
+export interface TreeItem {
+    name?: string,
+    attributes?: {
+      [key: string]: string,
+    };
+    children?: TreeItem[],
+    _collapsed?: boolean
+};

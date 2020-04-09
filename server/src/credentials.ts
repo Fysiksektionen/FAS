@@ -4,9 +4,8 @@ import { readFileSync } from 'fs'
 import { JWT } from 'google-auth-library'
 
 const auth = new JWT('', '', '', [
-    'https://www.googleapis.com/auth/admin.directory.group.readonly',
-    'https://www.googleapis.com/auth/admin.directory.group.member.readonly',
-    'https://www.googleapis.com/auth/admin.directory.user.readonly'
+    'https://www.googleapis.com/auth/admin.directory.group',
+    'https://www.googleapis.com/auth/admin.directory.user'
 ], 'morriser@fysiksektionen.se');
 
 const keyFilePath = join(__dirname, 'service_account.json');

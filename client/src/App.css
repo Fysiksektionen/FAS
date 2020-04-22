@@ -18,8 +18,9 @@
   font-family: 'Libre Franklin', sans-serif;
 }
 
-.content {
-  display: flex;
-  justify-content: center;
-  height: 100vh;
+a {
+    color: var(--color-orange); 
+    text-decoration: none;
 }
+
+button:focus {outline: 0;}

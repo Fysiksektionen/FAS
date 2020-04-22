@@ -13,10 +13,11 @@ import './Dashboard.css';
 const Dashboard: React.FC = () => {
 
     const [sidenavExpanded, setSidenavExpanded] = useState(false);
+    const [pageTitle, setPageTitle] = useState("Dashboard");
     
     return (
         <Router>
-            <Header expandSidenav={() => setSidenavExpanded(!sidenavExpanded)}/>
+            <Header expandSidenav={() => setSidenavExpanded(!sidenavExpanded)} pageTitle={pageTitle}/>
             <Sidenav expanded={sidenavExpanded} callback={() => setSidenavExpanded(!sidenavExpanded)}/>
             <div className="content">
                 <Switch>

@@ -14,6 +14,8 @@ import * as apiController from "./controllers/api"
 import CAS from "./controllers/auth"
 import { CASOptionsDev, CASOptionsPro} from "./lib/CASOptions"
 
+const file_system = require('fs');
+
 /* Initialise app */
 const app = express()
 app.set("port", process.env.PORT || 8080)
@@ -77,6 +79,36 @@ switch (app.get("env")){
         casAuth = CAS(CASOptionsDev) // development settings
         break
 }
+
+/* Logging actions */
+let logger: any = function(req: any, res: any, next: Function) { // req: Request, res: Response
+    let url = req.url;
+    if(!url.startsWith("/api")) { // only track api calls, at least for now. Maybe login too?
+        next();
+        return;
+    }
+
+    let current_datetime = new Date();
+    let formatted_date =
+        current_datetime.getFullYear() + "-" +
+        ("0"+(current_datetime.getMonth()+1)).slice(-2)  + "-" +
+        ("0" + current_datetime.getDate()).slice(-2)     + " " +
+        ("0" + current_datetime.getHours()).slice(-2)    + ":" +
+        ("0" + current_datetime.getMinutes()).slice(-2)  + ":" +
+        ("0" + current_datetime.getSeconds()).slice(-2)
+    let method = req.method;
+    //let status: number = res.status; // is a function for whatever reason
+    let status: number = res.statusCode;
+    let log = `[${formatted_date}] ${method}:${url} ${status} | ${req.session['cas_user']}`;
+    let file_name = "request_logs-" + current_datetime.getFullYear() + "-" + ("0"+(current_datetime.getMonth()+1)).slice(-2) + ".txt";
+
+    file_system.appendFile(file_name, log + "\n", (err: any) => {
+        if (err) { console.log(err); }
+    });
+    next();
+}
+app.use(logger);
+
 
 /* API routes */
 app.use("/api/", casAuth.block)  // middleware to block every unauthorized api request

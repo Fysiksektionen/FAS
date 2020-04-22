@@ -16,7 +16,7 @@ const useGetGroupAPI = () => {
     });
     useEffect(() => {
         const baseURI = process.env.FAS_BASE_URI || "http://localhost:8080"
-        const resourceUrl = baseURI + '/api/map'
+        const resourceUrl = baseURI + '/api/directory/map'
         fetch(resourceUrl)
             .then(response => response.json())
             .then(response => {

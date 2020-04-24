@@ -23,4 +23,16 @@ a {
     text-decoration: none;
 }
 
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    margin-bottom: 15px;
+    position: relative;
+    font-size: 20px;
+    box-shadow: 4px 4px lightgreen;
+    cursor: pointer;
+}
+
 button:focus {outline: 0;}

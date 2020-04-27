@@ -14,7 +14,7 @@
 
 .groupname {
     min-height: 100%;
-    max-width: 240px;
+    /*max-width: 240px;*/ /* no max, leave it be 100% */
     font-size: 24px;
     display: flex;
     flex-direction: column; 

@@ -216,19 +216,17 @@ class GroupList extends React.Component<{}, State> {
             <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
 
             <input className="input-checkbox" id="checkbox_name" type="checkbox" checked={this.state.filterName} onChange={()=>this.setState({filterName: !this.state.filterName})}/>
-            <label className="checkbox" htmlFor="checkbox_name"><span>
-                <svg width="12px" height="10px" viewBox="0 0 12 10">
+            <label className="checkbox" htmlFor="checkbox_name">
+                <span><svg width="12px" height="10px" viewBox="0 0 12 10">
                     <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                </svg>
-                </span>
+                </svg></span>
                 <span>Sök namn</span>
             </label>
             <input className="input-checkbox" id="checkbox_email" type="checkbox" checked={this.state.filterEmail} onChange={()=>this.setState({filterEmail: !this.state.filterEmail})}/>
-            <label className="checkbox" htmlFor="checkbox_email"><span>
-                <svg width="12px" height="10px" viewBox="0 0 12 10">
+            <label className="checkbox" htmlFor="checkbox_email">
+                <span><svg width="12px" height="10px" viewBox="0 0 12 10">
                     <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                </svg>
-                </span>
+                </svg></span>
                 <span>Sök email</span>
             </label>
 

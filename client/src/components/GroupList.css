@@ -1,10 +1,18 @@
-.groupContainer {
+/* .groupContainer {
     display: flex;
     justify-content: flex-start;
     flex-direction: column;
     width:40vw;
+} */
+.grouplist {
+    margin: 20px;
 }
-  
-@media screen and (max-width : 700px) {
+.grouplist input[type=text] {
+    font-size: 20px;
+    padding: 4px;
+    margin-left: 24px;
+}
+
+/* @media screen and (max-width : 700px) {
     .groupContainer {width:95vw;}
-}
+} */

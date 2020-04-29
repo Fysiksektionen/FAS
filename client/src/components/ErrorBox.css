@@ -6,6 +6,8 @@
     align-items: center;
     padding: 0px 40px;
     width: fit-content;
+    margin: auto;
+    margin-top: 10px;
 }
 
 .errorBox p {

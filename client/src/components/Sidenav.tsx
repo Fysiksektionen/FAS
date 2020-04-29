@@ -44,13 +44,6 @@ class Sidenav extends React.Component<Props, State> {
                         Grupper
                     </div>
                 </a>
-                <hr></hr>
-                <a href="/grouplist">
-                    <div className="sidenav-item">
-                        <img src={process.env.PUBLIC_URL + '/icon_list64.png'} alt=""></img>
-                        Listvy
-                    </div>
-                </a>
                 <a href="/grouptree">
                     <div className="sidenav-item">
                         <img src={process.env.PUBLIC_URL + '/icon_node64.png'} alt=""></img>

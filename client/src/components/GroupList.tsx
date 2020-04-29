@@ -124,7 +124,7 @@ class GroupList extends React.Component<{}, State> {
         <div className="grouplist">
 
             <a href="/add-group"><button>Add group</button></a>
-            <input type="text" placeholder="Search.." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
+            <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
             <p>Found {this.state.groupsFiltered?.length} group(s)</p>
 
             <hr></hr>

@@ -4,7 +4,7 @@ import { TreeItem } from '../../../shared/types/GroupNode'
 
 import Tree from 'react-d3-tree';
 import Spinner from './Spinner'
-import ErrorMessage from './ErrorMessage'
+import ErrorMessage from './ErrorBox'
 
 import './GroupTree.css';
 

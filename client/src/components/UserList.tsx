@@ -6,8 +6,7 @@ import Spinner          from './Spinner';
 import ErrorMessage     from './ErrorBox';
 
 import './UserList.css'
-
-
+import UserListElement from './UserListElement';
 
 
 type State = {
@@ -91,7 +90,6 @@ class UserList extends React.Component<{}, State> {
 
         // If search bar not empty
         if (this.state.isFiltering) {
-
             newList = currentList.filter(item => {
                 const filterWord = e.target.value.toLowerCase();
                 return item.name.fullName.toLowerCase().includes(filterWord) 
@@ -108,6 +106,7 @@ class UserList extends React.Component<{}, State> {
         });
     }   
 
+
     render() {
         
         const dummyUser: User = {
@@ -123,41 +122,33 @@ class UserList extends React.Component<{}, State> {
             orgUnitPath: ""
         }
 
-    return (
-        <div className="userlist">
+        return (
+            <div className="userlist">
 
-            <a href="/add-user"><button>Add user</button></a>
-            <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
-            <p>Found {this.state.usersFiltered?.length} group(s)</p>
+                <a href="/add-user"><button>Add user</button></a>
+                <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
+                <p>Found {this.state.usersFiltered?.length} group(s)</p>
 
-            <hr></hr>
+                <hr></hr>
 
-            <div className="list">
+                <div className="list">
 
 
+                    {/* test, to be removed */}
+                    <UserListElement {...dummyUser} />
 
-                <div className="userlist-element">
-                    <a href={"/users?id=" + dummyUser.id}>
-                        <h3>{dummyUser.name.fullName}</h3>
-                    </a>
+
+                    {this.state.apiService.status === 'loading' && <Spinner/>}
+                    {this.state.apiService.status === 'unauthorized' && <ErrorMessage message="Unauthorized"/>}
+                    {this.state.apiService.status === 'error' && <ErrorMessage message="Error: failed to load users"/>}
+                    {this.state.apiService.status === 'loaded' && 
+                        this.state.usersFiltered.map(user => 
+                            <UserListElement {...user} />
+                        )
+                    }
                 </div>
-
-                {this.state.apiService.status === 'loading' && <Spinner/>}
-                {this.state.apiService.status === 'unauthorized' && <ErrorMessage message="Unauthorized"/>}
-                {this.state.apiService.status === 'error' && <ErrorMessage message="Error: failed to load users"/>}
-                {this.state.apiService.status === 'loaded' && 
-                    this.state.usersFiltered.map(user => 
-                        <div className="userlist-element">
-                            <a href={"/users?id=" + user.id}>
-                                <h3>{user.name.fullName}</h3>
-                            </a>
-                            
-                        </div>
-                    )
-                }
             </div>
-        </div>
-    )}
+        )}
 }
 
 export default UserList;

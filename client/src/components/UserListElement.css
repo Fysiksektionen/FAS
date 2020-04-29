@@ -1,0 +1,34 @@
+.userlist-element {
+    background-color: #efefef;
+    margin-left: 0;
+    margin-top: 15px;
+    min-width: 300px;
+    min-height: 50px;
+    line-height: 50px; /* center text vertically */
+    font-size: 22px;
+}
+
+.user-text {
+    list-style-type: disc;
+    display: list-item; /* bullet/disc */
+    margin-left: 1.56em; /* move bullet */
+    color: initial; /* the link is orange, change back to black*/
+    /* Also good colors: */
+    /*color: darkgreen;*/
+    /*color: steelblue;*/
+    /*color: darkblue;*/
+    /*color: midnightblue;*/
+    /*color: purple;*/
+    /*color: rebeccapurple;*/
+    /*color: dimgray;*/
+    /*color: slategray;*/
+}
+
+.user-text > button {
+    height: 90%;
+    margin: 10px;
+    font-size: 16px;
+    padding: 10px;
+    float: right;
+    margin-top: 4.2px;
+}

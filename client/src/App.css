@@ -36,3 +36,11 @@ button {
 }
 
 button:focus {outline: 0;}
+
+/*@media (hover: none) and (pointer: coarse) {*/
+@media (max-width: 800px) {
+    button {
+        font-size: 18px;
+        padding: 7px 22px;
+    }
+}

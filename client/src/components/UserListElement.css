@@ -41,3 +41,23 @@
     float: right;
     margin-top: 4.2px;
 }
+
+/*@media (hover: none) and (pointer: coarse) {*/
+@media (max-width: 800px) {
+    .user-edit-button {
+        display: flex;
+    }
+    .userlist-element {
+        line-height: initial;
+    }
+    .user-name {
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
+    .user-email {
+        margin-top: 4px;
+        margin-bottom: 1px;
+        margin-left: 10px;
+        display: inline-block;
+    }
+}

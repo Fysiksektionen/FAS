@@ -13,6 +13,7 @@
     margin: 0 12px 0 24px;
 }
 
+
 .sort-button {
     box-shadow: 4px 4px skyblue;
     background-color: dodgerblue;
@@ -100,7 +101,30 @@
 }
 
 
+/*@media (hover: none) and (pointer: coarse) {*/
+@media (max-width: 800px) {
+    .grouplist {
+        margin: 16px;
+    }
+    .grouplist input[type=text] {
+        font-size: 18px;
+        display: block;
+        margin: 0 0 10px;
+        width: calc(100% - 12px);
+    }
 
-/* @media screen and (max-width : 700px) {
-    .groupContainer {width:95vw;}
-} */
+    .checkbox {
+        display: inline-block;
+        margin: 0px 1em 6px;
+    }
+
+    .sort-button {
+        margin: 10px 10px 0px;
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    p {
+        margin-bottom: 0.7em;
+    }
+}

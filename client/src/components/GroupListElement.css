@@ -67,3 +67,32 @@
     background: red;
     box-shadow: 4px 4px rgb(255, 100, 0);
 }
+
+
+@media (max-width: 800px) /*or for touch: (hover: none) and (pointer: coarse)*/ {
+    .groupnode {
+        margin-top: 10px;
+        display: block;
+    }
+
+    .group-name {
+        display: inline;
+        margin-left: 13px;
+        top: 3px;
+        position: relative;
+    }
+    .group-email {
+        display: block;
+        margin-top: 4px;
+    }
+
+    div .expandButtonContainer {
+        display: inline !important;
+    }
+    .expandButton {
+        display: inline !important;
+    }
+    .group-addmember-button, .group-edit-button {
+        display: inline !important;
+    }
+}

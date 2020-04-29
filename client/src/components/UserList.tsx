@@ -7,13 +7,15 @@ import ErrorMessage     from './ErrorBox';
 
 import './UserList.css'
 import UserListElement from './UserListElement';
+import QuickSort, { CompareFunction } from '../QuickSort';
 
 
 type State = {
     directoryMap: DirectoryMap,
     usersFiltered: User[],
     apiService: APIService<User[]>
-    isFiltering: boolean
+    isFiltering: boolean,
+    sortedAs: string, // should probably be replaced with enum type
 }
 
 class UserList extends React.Component<{}, State> {
@@ -24,7 +26,8 @@ class UserList extends React.Component<{}, State> {
             directoryMap: {} as DirectoryMap,
             usersFiltered: [] as User[],
             apiService: {status: 'loading'},
-            isFiltering: false
+            isFiltering: false,
+            sortedAs: 'default'
         }
         // Bind searchbar callback.
         this.handleChange = this.handleChange.bind(this);
@@ -104,7 +107,39 @@ class UserList extends React.Component<{}, State> {
         this.setState({
             usersFiltered: newList
         });
-    }   
+    }
+
+
+    sortListWith(compare: CompareFunction<User>) {
+        let array = this.state.usersFiltered;
+        let low = 0;
+        let high = array.length-1;
+        QuickSort(array, low, high, compare);
+
+        // not really needed since 'sortedAs', gets updated.
+        /*this.setState({
+            groupsFiltered: array
+        });*/
+    }
+    sortListBy(sortName: string, compareAscending: CompareFunction<User>, compareDescending: CompareFunction<User>) {
+        if(this.state.sortedAs ===  sortName + ' Ascending') {
+            this.sortListWith(compareDescending);
+            this.setState({ sortedAs: sortName + ' Descending' });
+        } else {
+            this.sortListWith(compareAscending);
+            this.setState({ sortedAs: sortName + ' Ascending' });
+        }
+    }
+    sortByName() {
+        this.sortListBy('Name',
+            (u1, u2) => u1.name.fullName.localeCompare(u2.name.fullName),
+            (u1, u2) => u2.name.fullName.localeCompare(u1.name.fullName));
+    }
+    sortByEmail() {
+        this.sortListBy('Email',
+            (u1, u2) => u1.email.localeCompare(u2.email),
+            (u1, u2) => u2.email.localeCompare(u1.email));
+    }
 
 
     render() {
@@ -127,6 +162,10 @@ class UserList extends React.Component<{}, State> {
 
                 <a href="/add-user"><button>Add user</button></a>
                 <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
+                <br />
+                <button className="sort-button" onClick={()=>this.sortByName()}>Sort by name</button>
+                <button className="sort-button" onClick={()=>this.sortByEmail()}>Sort by email</button>
+
                 <p>Found {this.state.usersFiltered?.length} group(s)</p>
 
                 <hr></hr>

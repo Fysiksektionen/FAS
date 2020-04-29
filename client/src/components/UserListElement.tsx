@@ -8,10 +8,10 @@ const UserListElement: React.FC<User> = (props: User) => {
         /* this div is our 'li' list element, but we don't want 'li' properties */
         <div className="userlist-element">
             <a href={"/users?id=" + props.id}>
-                <span className="user-text">
-                    {props.name.fullName}
-                    <button>Edit User</button>
-                </span>
+                <span className="user-name"> {props.name.fullName} </span>
+                <span className="user-email"> {props.email} </span>
+                <span className="user-edit-button"> <button>Edit User</button> </span>
+                
             </a>
             
         </div>

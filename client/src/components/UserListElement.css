@@ -8,7 +8,7 @@
     font-size: 22px;
 }
 
-.user-text {
+.user-name {
     list-style-type: disc;
     display: list-item; /* bullet/disc */
     margin-left: 1.56em; /* move bullet */
@@ -23,8 +23,17 @@
     /*color: dimgray;*/
     /*color: slategray;*/
 }
-
-.user-text > button {
+.user-name {
+    float: left;
+    width: 400px;
+}
+.user-email {
+    display: inline;
+    overflow: hidden;
+    color: initial;
+    font-style: italic;
+}
+.user-edit-button > button {
     height: 90%;
     margin: 10px;
     font-size: 16px;

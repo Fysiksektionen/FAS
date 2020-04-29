@@ -127,7 +127,7 @@ class UserList extends React.Component<{}, State> {
         <div className="userlist">
 
             <a href="/add-user"><button>Add user</button></a>
-            <input type="text" placeholder="Search.." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
+            <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
             <p>Found {this.state.usersFiltered?.length} group(s)</p>
 
             <hr></hr>

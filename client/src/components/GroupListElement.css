@@ -27,15 +27,15 @@
 
 .group-email {
     min-height: 100%;
-    width: 350px;
+    /*width: 350px;*/ /* will be cut of by buttons */
     font-size: 20px;
     display: flex;
     flex-direction: column; 
     justify-content: center;
     overflow: hidden;
     margin: 0;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
+    padding-left: 1em;
+    padding-right: 0.4em;
     padding-top: 0;
     padding-bottom: 0;
     font-style: italic;

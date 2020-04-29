@@ -6,6 +6,8 @@ import GroupListElement from './GroupListElement'
 import Spinner          from './Spinner';
 import ErrorMessage     from './ErrorBox';
 
+import QuickSort, {CompareFunction} from '../QuickSort'
+
 import './GroupList.css'
 
 
@@ -14,6 +16,7 @@ type State = {
     directoryMap: DirectoryMap,
     groupsFiltered: GroupWithChildren[],
     isFiltering: Boolean,
+    sortedAs: string, // should probably be replaced with enum type
     apiService: APIService<GroupWithChildren[]>
 }
 
@@ -25,6 +28,7 @@ class GroupList extends React.Component<{}, State> {
             directoryMap: {} as DirectoryMap,
             groupsFiltered: [] as GroupWithChildren[],
             isFiltering: false,
+            sortedAs: 'default',
             apiService: {status: 'loading'}
         }
         // Bind searchbar callback.
@@ -119,12 +123,62 @@ class GroupList extends React.Component<{}, State> {
         });
     }   
 
+
+    sortListWith(compare: CompareFunction<GroupWithChildren>) {
+        let array = this.state.groupsFiltered;
+        let low = 0;
+        let high = array.length-1;
+        QuickSort(array, low, high, compare);
+
+        // not really needed since 'sortedAs', gets updated.
+        /*this.setState({
+            groupsFiltered: array
+        });*/
+    }
+    sortListBy(sortName: string, compareAscending: CompareFunction<GroupWithChildren>, compareDescending: CompareFunction<GroupWithChildren>) {
+        if(this.state.sortedAs ===  sortName + ' Ascending') {
+            this.sortListWith(compareDescending);
+            this.setState({ sortedAs: sortName + ' Descending' });
+        } else {
+            this.sortListWith(compareAscending);
+            this.setState({ sortedAs: sortName + ' Ascending' });
+        }
+    }
+    sortByName() {
+        this.sortListBy('Name',
+            (g1, g2) => g1.name.localeCompare(g2.name),
+            (g1, g2) => g2.name.localeCompare(g1.name));
+    }
+    sortByEmail() {
+        this.sortListBy('Email',
+            (g1, g2) => g1.email.localeCompare(g2.email),
+            (g1, g2) => g2.email.localeCompare(g1.email));
+    }
+    sortByGroupCount() {
+        this.sortListBy('GroupCount',
+            (g1, g2) => g1.subGroups.length - g2.subGroups.length,
+            (g1, g2) => g2.subGroups.length - g1.subGroups.length);
+    }
+    sortByUserCount() {
+        this.sortListBy('UserCount',
+            (g1, g2) => g1.users.length - g2.users.length,
+            (g1, g2) => g2.users.length - g1.users.length);
+    }
+
+
     render() {
     return (
         <div className="grouplist">
 
             <a href="/add-group"><button>Add group</button></a>
+
             <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
+            <br />
+            <button className="sort-button" onClick={()=>this.sortByName()}>Sort by name</button>
+            <button className="sort-button" onClick={()=>this.sortByEmail()}>Sort by email</button>
+            <button className="sort-button" onClick={()=>this.sortByGroupCount()}>Sort by subgroup count</button>
+            <button className="sort-button" onClick={()=>this.sortByUserCount()}>Sort by user count</button>
+
             <p>Found {this.state.groupsFiltered?.length} group(s)</p>
 
             <hr></hr>

@@ -1,39 +1,142 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { APIService } from '../../../shared/types/APIService'
-import { GroupNodeResponse } from '../../../shared/types/GroupNode'
-import { GroupNode } from './GroupNode'
-import Spinner from './Spinner';
+import { DirectoryMap, GroupWithChildren } from '../../../shared/types/GroupNode'
+import GroupListElement from './GroupListElement'
+
+import Spinner          from './Spinner';
+import ErrorMessage     from './ErrorBox';
+
 import './GroupList.css'
 
 
 
-const useGetGroupAPI = () => {
-    // initialise state result with a Service taking a list of GroupNodeResponse with status loading
-    const [result, setResult] = useState<APIService<GroupNodeResponse[]>>({
-        status: 'loading'
-    })
-    useEffect(() => {
+type State = {
+    directoryMap: DirectoryMap,
+    groupsFiltered: GroupWithChildren[],
+    isFiltering: Boolean,
+    apiService: APIService<GroupWithChildren[]>
+}
+
+class GroupList extends React.Component<{}, State> {
+
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            directoryMap: {} as DirectoryMap,
+            groupsFiltered: [] as GroupWithChildren[],
+            isFiltering: false,
+            apiService: {status: 'loading'}
+        }
+        // Bind searchbar callback.
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentDidMount() {
         const baseURI = process.env.FAS_BASE_URI || "http://localhost:8080"
         const resourceUrl = baseURI + '/api/directory/map'
         fetch(resourceUrl)
-            .then(response => response.json())
             .then(response => {
-                setResult({ status: 'loaded', payload: response.groups })
+                
+                if (response.status === 401) {  
+                    throw new Error("Unauthorized");
+                }
+                return response.json()
             })
-            .catch(error => setResult({ status: 'error', error }))
-    }, [])
-    return result
-}
+            .then(response => {
+                // Update the directory map.
+                this.setState({
+                    directoryMap: response
+                });
+                // To allow filtering and sorting of groups, we create a
+                // GroupNodeResponse[]
+                var arr = [] as GroupWithChildren[];
+                Object.keys(response.groups).forEach(key => {
+                    const group: GroupWithChildren = {
+                        id: response.groups[key].id,
+                        name: response.groups[key].name,
+                        email: response.groups[key].email,
+                        description: response.groups[key].description,
+                        nonEditableAliases: [],
+                        subGroups: [],
+                        users: []
+                    }
+                    arr.push(group);
+                });
 
-export const Groups: React.FC = () => {
-    const service = useGetGroupAPI();
+                this.setState({
+                    apiService: {
+                        status: 'loaded',
+                        payload: arr
+                    },
+                    groupsFiltered: arr
+                });
+            })
+            .catch((error: Error) => {
+                if (error.message === "Unauthorized") {
+                    this.setState({ 
+                        apiService: {
+                            status: 'unauthorized'
+                        }
+                    });
+                }
+                else
+                {
+                    this.setState({ 
+                        apiService: {
+                            status: 'error',
+                            error: error 
+                        }
+                    });
+                }
+            });
+    }
+
+    handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+
+        let currentList = this.state.apiService.status === 'loaded' ? this.state.apiService.payload : [] as GroupWithChildren[];
+        let newList = [] as GroupWithChildren[];
+
+        this.setState({
+            isFiltering: (e.target.value.length >= 2)
+        });
+
+        // If search bar not empty
+        if (this.state.isFiltering) {
+
+            newList = currentList.filter(item => {
+                const filterWord = e.target.value.toLowerCase();
+                return item.name.toLowerCase().includes(filterWord) 
+                       || item.email.toLowerCase().includes(filterWord);
+            });
+        }
+        // Search bar is empty, so display original list
+        else {
+            newList = currentList;
+        }
+        // Update filtered state.
+        this.setState({
+            groupsFiltered: newList
+        });
+    }   
+
+    render() {
     return (
-        <div>
-            {service.status === 'loading' && <Spinner/>}
-            {service.status === 'loaded' && service.payload.map(groupNode => <GroupNode {...groupNode}/>)}
-            {service.status === 'error' && <div style={{color:"white"}}>Oops something went wrong, couldn't load groups.</div>}
+        <div className="grouplist">
+
+            <a href="/add-group"><button>Add group</button></a>
+            <input type="text" placeholder="Search.." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
+            <p>Found {this.state.groupsFiltered?.length} group(s)</p>
+
+            <hr></hr>
+
+            <div className="list">
+                {this.state.apiService.status === 'loading' && <Spinner/>}
+                {this.state.apiService.status === 'loaded' && this.state.groupsFiltered.map(g => <GroupListElement {...g} />)}
+                {this.state.apiService.status === 'unauthorized' && <ErrorMessage message="Unauthorized"/>}
+                {this.state.apiService.status === 'error' && <ErrorMessage message="Error: failed to load groups"/>}
+            </div>
         </div>
-    )
+    )}
 }
 
-export default Groups;
+export default GroupList;

@@ -20,14 +20,21 @@ export interface User {
 	orgUnitPath: string,
 }
 
-export type GroupNodeResponse = CommonGroup & {
+export type Group = CommonGroup & {
 	subGroups: string[],
 	users: string[],
 }
 
-export type GroupNode = CommonGroup & {
-	subGroups: GroupNode[],
+export type GroupWithChildren = CommonGroup & {
+	subGroups: GroupWithChildren[],
 	users: User[],
+}
+
+
+
+export interface DirectoryMap {
+    groups: { [id: string]: Group }
+    users: { [id: string]: User }
 }
 
 export interface TreeItem {

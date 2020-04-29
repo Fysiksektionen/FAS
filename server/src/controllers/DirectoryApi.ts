@@ -2,7 +2,7 @@
 import { admin_directory_v1 } from 'googleapis';
 import { as } from './asyncUtil';
 import { basicDict } from '../../../shared/types/common';
-import { GroupNodeResponse, User } from '../../../shared/types/GroupNode';
+import { Group, User } from '../../../shared/types/GroupNode';
 
 type cGroup = admin_directory_v1.Schema$Group & {
     subGroups: string[];
@@ -55,7 +55,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         }
 
         return {
-            groups: this.Cgroups as {[id: string]: GroupNodeResponse},
+            groups: this.Cgroups as {[id: string]: Group},
             users: {} // Add if needed
         };
     }

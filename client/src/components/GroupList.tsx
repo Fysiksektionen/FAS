@@ -15,7 +15,10 @@ import './GroupList.css'
 type State = {
     directoryMap: DirectoryMap,
     groupsFiltered: GroupWithChildren[],
-    isFiltering: Boolean,
+    currentFilterWord: string,
+    isFiltering: boolean,
+    filterName: boolean,
+    filterEmail: boolean,
     sortedAs: string, // should probably be replaced with enum type
     apiService: APIService<GroupWithChildren[]>
 }
@@ -27,7 +30,10 @@ class GroupList extends React.Component<{}, State> {
         this.state = {
             directoryMap: {} as DirectoryMap,
             groupsFiltered: [] as GroupWithChildren[],
+            currentFilterWord: '',
             isFiltering: false,
+            filterName: true, 
+            filterEmail: false,
             sortedAs: 'default',
             apiService: {status: 'loading'}
         }
@@ -96,27 +102,62 @@ class GroupList extends React.Component<{}, State> {
     }
 
     handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        /** Ideas to effectivate the search:
+         * 
+         * 1. All 2 character combinations ([A-z 0-9]=1444), are stored in a hashmap. Each node that has the combination are in associated list.
+         * 
+         * 2. If the user continues to type,
+         *      either don't search until stopped writing,
+         *      or save the search and run it on the new list. (onChange is called in order, at least for now)
+         * 
+         * 3. ???
+         */
+
 
         let currentList = this.state.apiService.status === 'loaded' ? this.state.apiService.payload : [] as GroupWithChildren[];
         let newList = [] as GroupWithChildren[];
+        let oldWord = this.state.currentFilterWord;
+        let newWord = e.target.value;
+        let isFiltering = (e.target.value.length >= 2);
 
         this.setState({
-            isFiltering: (e.target.value.length >= 2)
+            currentFilterWord: newWord,
+            isFiltering: isFiltering
         });
 
         // If search bar not empty
-        if (this.state.isFiltering) {
+        if (isFiltering) {
+            const filterWord = e.target.value.toLowerCase();
 
-            newList = currentList.filter(item => {
-                const filterWord = e.target.value.toLowerCase();
-                return item.name.toLowerCase().includes(filterWord) 
-                       || item.email.toLowerCase().includes(filterWord);
-            });
+            // check if searched list is enough (reuse the list)
+            if(newWord.startsWith(oldWord)) {
+                currentList = this.state.groupsFiltered;
+            }
+            
+            // check what to filter
+            if(this.state.filterName) {
+                if(this.state.filterEmail) { // filter both name and email
+                    newList = currentList.filter(item => 
+                            item.name.toLowerCase().includes(filterWord) 
+                            || item.email.includes(filterWord)); // assume email to be lowercase
+                }
+                else { // filter name, not email
+                    newList = currentList.filter(item => item.name.toLowerCase().includes(filterWord));
+                }
+            }
+            else if(this.state.filterEmail) { // filter email, not name
+                newList = currentList.filter(item => item.email.includes(filterWord)); // assume email to be lowercase
+            }
+            else {
+                // reset
+                this.setState({filterName: true});
+            }
         }
         // Search bar is empty, so display original list
         else {
             newList = currentList;
         }
+
         // Update filtered state.
         this.setState({
             groupsFiltered: newList
@@ -173,6 +214,24 @@ class GroupList extends React.Component<{}, State> {
             <a href="/add-group"><button>Add group</button></a>
 
             <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
+
+            <input className="input-checkbox" id="checkbox_name" type="checkbox" checked={this.state.filterName} onChange={()=>this.setState({filterName: !this.state.filterName})}/>
+            <label className="checkbox" htmlFor="checkbox_name"><span>
+                <svg width="12px" height="10px" viewBox="0 0 12 10">
+                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                </svg>
+                </span>
+                <span>Sök namn</span>
+            </label>
+            <input className="input-checkbox" id="checkbox_email" type="checkbox" checked={this.state.filterEmail} onChange={()=>this.setState({filterEmail: !this.state.filterEmail})}/>
+            <label className="checkbox" htmlFor="checkbox_email"><span>
+                <svg width="12px" height="10px" viewBox="0 0 12 10">
+                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                </svg>
+                </span>
+                <span>Sök email</span>
+            </label>
+
             <br />
             <button className="sort-button" onClick={()=>this.sortByName()}>Sort by name</button>
             <button className="sort-button" onClick={()=>this.sortByEmail()}>Sort by email</button>

@@ -1,38 +1,34 @@
-import React, { useState } from 'react';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import './App.css';
-import Groups from './components/Groups';
-import Header from './components/Header';
-import Sidenav from './components/Sidenav';
-import GraphView from './components/GraphView'
+import React, { useState, useEffect } from 'react';
+import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 
-const ListView: React.FC = () => {
-  return (
-      <div className="content">
-        <Groups/>
-      </div>
-  );
-}
+import Frontpage from './components/Frontpage';
+import Dashboard from './components/Dashboard';
+
+import './App.css';
+
+
 
 const App: React.FC = () => {
 
-  const [sidenavExpanded, setSidenavExpanded] = useState(false)
+    const [loggedin, setLoggedin] = useState(false);
 
-  return (
-    <Router>
-      <div className="background">
-        <Header expandSidenav={() => setSidenavExpanded(!sidenavExpanded)}/>
-        <Sidenav expanded={sidenavExpanded} callback={() => setSidenavExpanded(!sidenavExpanded)}/>
-        
-        
-        <Switch>
-          <Route exact path="/listview" component={ListView} /> 
-          <Route exact path="/graphview" component={GraphView} />
-        </Switch>
+    useEffect(() => {
+        const baseURI = process.env.FAS_BASE_URI || "http://localhost:8080"
+        const resourceUrl = baseURI + '/api/me'
+        fetch(resourceUrl)
+        .then(response => response.json())
+        .then(response => {
+            if(response.authenticated) {
+                setLoggedin(true)
+            }
+        })
+    })
 
-      </div>
-    </Router>
-  )
+    return (
+        <div className="background">
+            {loggedin ? <Dashboard /> : <Frontpage />}
+        </div>
+    )
 }
 
 export default App;

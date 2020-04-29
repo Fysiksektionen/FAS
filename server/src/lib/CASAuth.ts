@@ -176,6 +176,8 @@ function CASAuthentication(options: CASOptionsType) {
     this.session_info    = [ '2.0', '3.0', 'saml1.1' ].indexOf(this.cas_version) >= 0 && options.session_info !== undefined ? options.session_info : false;
     this.destroy_session = options.destroy_session !== undefined ? !!options.destroy_session : false;
 
+    this.logout_url      = options.service_url;
+
     // Bind the prototype routing methods to this instance of CASAuthentication.
     this.bounce          = this.bounce.bind(this);
     this.bounce_redirect = this.bounce_redirect.bind(this);
@@ -233,7 +235,7 @@ CASAuthentication.prototype._handle = function(req: Request, res: Response, next
     }
     // If the authentication type is BLOCK, simply send a 401 response.
     else if (authType === AUTH_TYPE.BLOCK) {
-        res.status(401).json({ok:false,message:"Unauthorized, please log in"});
+        res.status(401).json({authenticated: false, message: "Unauthorized, please log in"});
     }
     // If dev mode is active, set the CAS user to the specified dev user.
     else if (this.is_dev_mode) {
@@ -306,7 +308,7 @@ CASAuthentication.prototype.logout = function(req: Request, res: Response, next:
     }
 
     // Redirect the client to the CAS logout.
-    res.redirect(this.cas_url + '/logout');
+    res.redirect(this.logout_url);
 };
 
 /**

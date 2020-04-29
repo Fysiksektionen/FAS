@@ -42,7 +42,7 @@ else { // Use real database connection when not testing.
 }
 
 /* Set up a session store, exposes req.session. */
-app.use( session({
+app.use(session({
     secret            : 'super secret key',
     resave            : false,
     saveUninitialized : false,
@@ -112,9 +112,8 @@ app.use(logger);
 
 /* API routes */
 app.use("/api/", casAuth.block)  // middleware to block every unauthorized api request
-app.get("/api/groups", apiController.getGroups)
-app.get("/api/map", apiController.getMap)
-app.get("/api/me", (req,res) => res.json({name:req.session['cas_user']}))
+app.get("/api/directory/map", apiController.getMap)
+app.get("/api/me", (req,res) => res.json({authenticated: true, name:req.session['cas_user'], data:req.session}))
 
 /* Other routes */
 app.get("/login", casAuth.bounce_redirect) // requires 

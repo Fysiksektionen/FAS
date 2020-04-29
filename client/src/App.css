@@ -18,8 +18,21 @@
   font-family: 'Libre Franklin', sans-serif;
 }
 
-.content {
-  display: flex;
-  justify-content: center;
-  height: 100vh;
+a {
+    color: var(--color-orange); 
+    text-decoration: none;
 }
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px 32px;
+    margin-bottom: 15px;
+    position: relative;
+    font-size: 20px;
+    box-shadow: 4px 4px lightgreen;
+    cursor: pointer;
+}
+
+button:focus {outline: 0;}

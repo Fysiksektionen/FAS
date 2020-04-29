@@ -1,5 +1,5 @@
 import React from 'react';
-import './Sidenav.css';
+import  './Sidenav.css';
 
 type Props = {
     expanded: boolean,
@@ -24,8 +24,11 @@ class Sidenav extends React.Component<Props, State> {
     render() {
     return (
         <div className="sidenav" style={this.props.expanded ? {width: "250px"} : {width: "0px"}}> 
+            <div className="sidenav-close">
+                <div className="sidenav-close-cross" onClick={() => {if (this.props.callback) {this.props.callback()}}}></div>
+            </div>
                 
-                <h2 onClick={() => {if (this.props.callback) {this.props.callback()}}}>Meny</h2>
+                <h2>Meny</h2>
                 <p>Användare: {this.state?.name}</p>
 
                 <hr></hr>
@@ -41,14 +44,7 @@ class Sidenav extends React.Component<Props, State> {
                         Grupper
                     </div>
                 </a>
-                <hr></hr>
-                <a href="/listview">
-                    <div className="sidenav-item">
-                        <img src={process.env.PUBLIC_URL + '/icon_list64.png'} alt=""></img>
-                        Listvy
-                    </div>
-                </a>
-                <a href="/graphview">
+                <a href="/grouptree">
                     <div className="sidenav-item">
                         <img src={process.env.PUBLIC_URL + '/icon_node64.png'} alt=""></img>
                         Trädvy
@@ -63,7 +59,7 @@ class Sidenav extends React.Component<Props, State> {
                 </a>
 
                 <p style={{bottom: 0, position: "absolute"}}>FAS v. {this.state?.version}</p>
-                <p style={{bottom: 20, position: "absolute"}}>By F.dev</p>
+                <p style={{bottom: 20, position: "absolute"}}>By F.dev 2020</p>
         </div>
     )
     }

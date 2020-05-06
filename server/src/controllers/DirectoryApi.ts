@@ -17,7 +17,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
     private cached: boolean = false;
     private readonly defaultRequestOpts = {
         domain: this.domain,
-        maxResults: 200,
+        maxResults: 500,
     };
     private readonly defaultGroupNodeFields: (keyof GroupNodeResponse)[] = [
         "id",

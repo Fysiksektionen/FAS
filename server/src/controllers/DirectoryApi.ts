@@ -111,8 +111,20 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         return members || [];
     }
 
-    public async listUsers(groupKey: string, opts?: basicDict) {
-        // TODO
+    public async listUsers(opts?: basicDict): Promise<admin_directory_v1.Schema$User[]> {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.users.list(opts));
+        if (err) return Promise.reject(err);
+
+        const users = res.data.users;
+
+        if (res.data.nextPageToken) {
+            const [err, nextUsers] = await as(this.listUsers({...opts, pageToken: res.data.nextPageToken}));
+            if (err) return Promise.reject(err);
+            users.push(...nextUsers);
+        }
+        return users;
     }
 
 }

@@ -4,7 +4,7 @@ import { as } from './asyncUtil';
 import { basicDict } from '../../../shared/types/common';
 import { GroupNodeResponse, User } from '../../../shared/types/GroupNode';
 
-type cGroup = admin_directory_v1.Schema$Group & {
+interface cGroup extends admin_directory_v1.Schema$Group {
     subGroups: string[];
     users: string[];
 }
@@ -15,10 +15,18 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
     private Cgroups: {[id: string]: cGroup};
     private Cusers: {[id: string]: cUser};
     private cached: boolean = false;
-    private readonly def = {
+    private readonly defaultRequestOpts = {
         domain: this.domain,
         maxResults: 200,
     };
+    private readonly defaultGroupNodeFields: (keyof GroupNodeResponse)[] = [
+        "id",
+        "email",
+        "name",
+        "description",
+        "aliases",
+        "nonEditableAliases",
+    ];
 
     constructor(public domain: string, opts: Partial<admin_directory_v1.Options>) {
         super({version: 'directory_v1', ...opts});
@@ -31,7 +39,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
      * @param opts 
      */
     public async getMap(opts?: basicDict, noCache = false) {
-        opts = {...this.def, ...opts};
+        opts = {...this.defaultRequestOpts, ...opts};
 
         if (!this.cached || noCache) {
             const [err, groups] = await as(this.listGroups(opts));
@@ -54,14 +62,25 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
             this.cached = true;
         }
 
+        let responseGroups: {[id: string]: GroupNodeResponse};
+        for (const id in this.Cgroups) {
+            const cGroup = this.Cgroups[id];
+            let group: GroupNodeResponse;
+            for (const field of this.defaultGroupNodeFields) {
+                //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
+                group[field] = cGroup[field];
+            }
+            responseGroups[id] = group;
+        }
+
         return {
-            groups: this.Cgroups as {[id: string]: GroupNodeResponse},
+            groups: responseGroups,
             users: {} // Add if needed
         };
     }
 
-    public async listGroups(opts?: basicDict) : Promise<admin_directory_v1.Schema$Group[]> {
-        opts = {...this.def, ...opts};
+    public async listGroups(opts?: basicDict): Promise<admin_directory_v1.Schema$Group[]> {
+        opts = {...this.defaultRequestOpts, ...opts};
 
         const [err, res] = await as(this.groups.list(opts));
         if (err) return Promise.reject(err);
@@ -77,7 +96,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
     }
 
     public async listMembers(groupKey: string, opts?: basicDict): Promise<admin_directory_v1.Schema$Member[]> {
-        opts = {...this.def, ...opts, groupKey};
+        opts = {...this.defaultRequestOpts, ...opts, groupKey};
 
         const [err, res] = await as(this.members.list(opts));
         if (err) return Promise.reject(err);
@@ -92,7 +111,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         return members || [];
     }
 
-    public async getUsers(groupKey: string, opts?: basicDict) {
+    public async listUsers(groupKey: string, opts?: basicDict) {
         // TODO
     }
 

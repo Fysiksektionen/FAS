@@ -4,6 +4,7 @@ interface CommonGroup {
 	email: string,
 	name: string,
 	description: string,
+	aliases: string[],
 	nonEditableAliases: string[],
 }
 
@@ -20,12 +21,12 @@ export interface User {
 	orgUnitPath: string,
 }
 
-export type GroupNodeResponse = CommonGroup & {
+export interface GroupNodeResponse extends CommonGroup {
 	subGroups: string[],
 	users: string[],
 }
 
-export type GroupNode = CommonGroup & {
+export interface GroupNode extends CommonGroup {
 	subGroups: GroupNode[],
 	users: User[],
 }

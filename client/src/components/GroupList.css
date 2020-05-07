@@ -22,6 +22,13 @@
     font-size: 16px;
     padding: 10px;
 }
+.sort-button:hover {
+    background: #106FF0;  /*dodgerblue  -  (1e90ff)*/;
+}
+.sort-button:active {
+  box-shadow: 2px 2px skyblue;
+  transform: translate3d(2px, 2px, 0)
+}
 
 
 .checkbox {

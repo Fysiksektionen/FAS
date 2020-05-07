@@ -8,7 +8,10 @@ interface cGroup extends admin_directory_v1.Schema$Group {
     subGroups: string[];
     users: string[];
 }
-type cUser = admin_directory_v1.Schema$Member
+interface cUser extends admin_directory_v1.Schema$User {
+    email: string;
+    type?: string;
+}
 
 export default class DirectoryApi extends admin_directory_v1.Admin {
     
@@ -27,6 +30,15 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         "aliases",
         "nonEditableAliases",
     ];
+    private readonly defaultUserFields: (keyof User)[] = [
+        "id",
+        "email",
+        "name",
+        "isAdmin",
+        "lastLoginTime",
+        "creationTime",
+        "orgUnitPath",
+    ];
 
     constructor(public domain: string, opts: Partial<admin_directory_v1.Options>) {
         super({version: 'directory_v1', ...opts});
@@ -39,15 +51,16 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
      * @param opts 
      */
     public async getMap(opts?: basicDict, noCache = false) {
-        opts = {...this.defaultRequestOpts, ...opts};
 
         if (!this.cached || noCache) {
             const [err, groups] = await as(this.listGroups(opts));
             if (err) return Promise.reject(err);
+            const [err2, users] = await as(this.listUsers(opts));
+            if (err2) return Promise.reject(err2);
 
             const memberPromises = groups.map(async (group: Partial<cGroup>) => {
-                const [err2, members] = await as(this.listMembers(group.id));
-                if (err2 || !members) return Promise.reject(err2);
+                const [err3, members] = await as(this.listMembers(group.id));
+                if (err3 || !members) return Promise.reject(err3);
                 
                 group.subGroups = members.filter(member => member.type === 'GROUP').map(subGroup => subGroup.id);
                 group.users = members.filter(member => member.type === 'USER').map(user => user.id);
@@ -59,23 +72,44 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
             for (const group of mappedGroups) {
                 this.Cgroups[group.id] = group;
             }
+            for (const user of users) {
+                // Parse primary email
+                for (const email of user.emails) {
+                    if (email.primary) {
+                        const {emails, ...Cuser} = {...user, email: email.address as string};
+                        this.Cusers[user.id] = Cuser;
+                        break;
+                    }
+                }
+            }
             this.cached = true;
         }
 
-        let responseGroups: {[id: string]: GroupNodeResponse};
+        const responseGroups: {[id: string]: GroupNodeResponse} = {};
         for (const id in this.Cgroups) {
-            const cGroup = this.Cgroups[id];
-            let group: GroupNodeResponse;
+            const Cgroup = this.Cgroups[id];
+            const group: Partial<GroupNodeResponse> = {};
             for (const field of this.defaultGroupNodeFields) {
                 //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
-                group[field] = cGroup[field];
+                group[field] = Cgroup[field];
             }
-            responseGroups[id] = group;
+            responseGroups[id] = group as GroupNodeResponse;
+        }
+
+        const responseUsers: {[id: string]: User} = {};
+        for (const id in this.Cusers) {
+            const Cuser = this.Cusers[id];
+            const user: Partial<User> = {};
+            for (const field of this.defaultUserFields) {
+                //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
+                user[field] = Cuser[field];
+            }
+            responseUsers[id] = user as User;
         }
 
         return {
             groups: responseGroups,
-            users: {} // Add if needed
+            users: responseUsers
         };
     }
 

@@ -11,10 +11,14 @@ interface CommonGroup {
 export interface User {
 	id: string,
 	email: string,
-	name: {fullName: string},
-	role: string,
+	name: {
+		givenName: string,
+		familyName: string,
+		fullName: string
+	},
+	role?: string,
 	type: string,
-	status: string,
+	status?: string,
 	isAdmin: boolean,
 	lastLoginTime: string,
 	creationTime: string,

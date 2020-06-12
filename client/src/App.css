@@ -34,5 +34,20 @@ button {
     box-shadow: 4px 4px lightgreen;
     cursor: pointer;
 }
+button:hover {
+    background: #3e8e41;
+}
+button:active {
+  box-shadow: 2px 2px lightgreen;
+  transform: translate3d(2px, 2px, 0)
+}
 
 button:focus {outline: 0;}
+
+/*@media (hover: none) and (pointer: coarse) {*/
+@media (max-width: 800px) {
+    button {
+        font-size: 18px;
+        padding: 7px 22px;
+    }
+}

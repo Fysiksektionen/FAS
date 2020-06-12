@@ -4,5 +4,18 @@
 .userlist input[type=text] {
     font-size: 20px;
     padding: 4px;
-    margin-left: 24px;
+    margin: 0 12px 0 24px;
+}
+
+/*@media (hover: none) and (pointer: coarse) {*/
+@media (max-width: 800px) {
+    .userlist {
+        margin: 16px;
+    }
+    .userlist input[type=text] {
+        font-size: 18px;
+        display: block;
+        margin: 0 0 10px;
+        width: calc(100% - 12px);
+    }
 }

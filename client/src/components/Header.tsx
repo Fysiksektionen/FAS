@@ -14,7 +14,7 @@ const Header : React.FC<HeaderProps> = (props: HeaderProps) => {
                     onClick={() => props.expandSidenav()}></img>
                 <h3 onClick={() => props.expandSidenav()}>FAS</h3>
             </div>
-            <div className="pageTitle">
+            <div className="page-title">
                 <h2>{props?.pageTitle}</h2>
             </div>
         </div>

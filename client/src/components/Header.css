@@ -22,3 +22,17 @@
     height: 50px;
     padding-right: 20px;
 }
+
+
+/*@media (hover: none) and (pointer: coarse) {*/
+@media (max-width: 800px) {
+    .title {
+        padding: 4px 30px 4px 22px;
+    }
+    .page-title h2{
+        margin: 0;
+    }
+    .page-title {
+        margin: auto;
+    }
+}

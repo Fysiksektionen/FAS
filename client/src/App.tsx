@@ -10,23 +10,37 @@ import './App.css';
 
 const App: React.FC = () => {
 
+    const key = "loggedin"
     const [loggedin, setLoggedin] = useState(false);
 
     useEffect(() => {
+        if(window.sessionStorage.getItem(key) === "true") {
+            setLoggedin(true);
+        } else {
+            setLoggedin(false);
+        }
+
         const baseURI = process.env.FAS_BASE_URI || "http://localhost:8080"
         const resourceUrl = baseURI + '/api/me'
         fetch(resourceUrl)
         .then(response => response.json())
         .then(response => {
             if(response.authenticated) {
-                setLoggedin(true)
+                setLoggedin(true);
+                window.sessionStorage.setItem(key, "true");
+            }
+            else {
+                setLoggedin(false);
+                window.sessionStorage.setItem(key, "false");
             }
         })
     })
 
     return (
         <div className="background">
-            {loggedin ? <Dashboard /> : <Frontpage />}
+            {
+                loggedin ? <Dashboard /> : <Frontpage />
+            }
         </div>
     )
 }

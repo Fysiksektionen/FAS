@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import  './Sidenav.css';
 
 type Props = {
@@ -12,7 +12,16 @@ type State = {
 
 class Sidenav extends React.Component<Props, State> {
 
+    selfRef = React.createRef<HTMLDivElement>();
+
+    constructor(props: Props) {
+        super(props);
+
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+    }
+
     componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
         
         const baseURI = process.env.FAS_BASE_URI || "http://localhost:8080"
         const resourceUrl = baseURI + '/api/me'
@@ -20,10 +29,21 @@ class Sidenav extends React.Component<Props, State> {
             .then(results => results.json())
             .then(data => {this.setState(data)})
     }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside(e: MouseEvent) {
+        if (this.props.expanded && this.selfRef.current && e.target instanceof Node 
+                                && !this.selfRef.current.contains(e.target)) {
+            this.props.callback()
+        }
+    }
     
     render() {
     return (
-        <div className="sidenav" style={this.props.expanded ? {width: "250px"} : {width: "0px"}}> 
+        <div className="sidenav" ref={this.selfRef} style={this.props.expanded ? {width: "250px"} : {width: "0px"}}> 
             <div className="sidenav-close">
                 <div className="sidenav-close-cross" onClick={() => {if (this.props.callback) {this.props.callback()}}}></div>
             </div>

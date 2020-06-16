@@ -15,20 +15,28 @@ export interface User {
 		givenName: string,
 		familyName: string,
 		fullName: string
-	},
-	role?: string,
-	type: string,
-	status?: string,
+    },
 	isAdmin: boolean,
 	lastLoginTime: string,
 	creationTime: string,
 	orgUnitPath: string,
 }
 
-export interface GroupNodeResponse extends CommonGroup {
-	subGroups: string[],
-	users: string[],
+export interface Member {
+    id: string,
+    role: string,
+    delivery_settings: string
 }
+
+export interface Group extends CommonGroup {
+	subGroups: Member[],
+	users: Member[],
+}
+
+// export interface GroupNodeResponse extends CommonGroup {
+// 	subGroups: string[],
+// 	users: string[],
+// }
 
 export interface GroupNode extends CommonGroup {
 	subGroups: GroupNode[],

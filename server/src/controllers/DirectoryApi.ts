@@ -2,7 +2,7 @@
 import { admin_directory_v1 } from 'googleapis';
 import { as } from './asyncUtil';
 import { basicDict } from '../../../shared/types/common';
-import { GroupNodeResponse, User } from '../../../shared/types/GroupNode';
+import { Group, User, Member } from '../../../shared/types/GroupNode';
 
 interface cGroup extends admin_directory_v1.Schema$Group {
     subGroups: string[];
@@ -22,7 +22,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         domain: this.domain,
         maxResults: 500,
     };
-    private readonly defaultGroupNodeFields: (keyof GroupNodeResponse)[] = [
+    private readonly defaultGroupFields: (keyof Group)[] = [
         "id",
         "email",
         "name",
@@ -38,6 +38,11 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         "lastLoginTime",
         "creationTime",
         "orgUnitPath",
+    ];
+    private readonly defaultMemberFields: (keyof Member)[] = [
+        "id",
+        "role",
+        "delivery_settings"
     ];
 
     constructor(public domain: string, opts: Partial<admin_directory_v1.Options>) {
@@ -85,15 +90,15 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
             this.cached = true;
         }
 
-        const responseGroups: {[id: string]: GroupNodeResponse} = {};
+        const responseGroups: {[id: string]: Group} = {};
         for (const id in this.Cgroups) {
             const Cgroup = this.Cgroups[id];
-            const group: Partial<GroupNodeResponse> = {};
-            for (const field of this.defaultGroupNodeFields) {
+            const group: Partial<Group> = {};
+            for (const field of this.defaultGroupFields) {
                 //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
                 group[field] = Cgroup[field];
             }
-            responseGroups[id] = group as GroupNodeResponse;
+            responseGroups[id] = group as Group;
         }
 
         const responseUsers: {[id: string]: User} = {};

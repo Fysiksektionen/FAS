@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './GroupNode.css';
 
-import { GroupNodeResponse } from '../../../shared/types/GroupNode'
+import { Group } from '../../../shared/types/GroupNode'
 import ExpandButton from './ExpandButton';
 
 // Feel free to rename this components
 
 // renders a single group in the expandable list/tree.
-export const GroupNode: React.FC<GroupNodeResponse> = (props: GroupNodeResponse) => {
+export const GroupNode: React.FC<Group> = (props: Group) => {
     const [expanded, setExpanded] = useState(false)
     const childrenArray = props.subGroups ? props.subGroups : []
     return (

@@ -10,7 +10,7 @@ interface CommonGroup {
 
 export interface User {
 	id: string,
-	email: string,
+	primaryEmail: string,
 	name: {
 		givenName: string,
 		familyName: string,

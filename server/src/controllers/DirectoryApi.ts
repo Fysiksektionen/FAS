@@ -5,12 +5,11 @@ import { basicDict } from '../../../shared/types/common';
 import { Group, User, Member } from '../../../shared/types/GroupNode';
 
 interface cGroup extends admin_directory_v1.Schema$Group {
-    subGroups: string[];
-    users: string[];
+    subGroups: Member[];
+    users: Member[];
 }
 interface cUser extends admin_directory_v1.Schema$User {
-    email: string;
-    type?: string;
+
 }
 
 export default class DirectoryApi extends admin_directory_v1.Admin {
@@ -32,7 +31,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
     ];
     private readonly defaultUserFields: (keyof User)[] = [
         "id",
-        "email",
+        "primaryEmail",
         "name",
         "isAdmin",
         "lastLoginTime",
@@ -67,8 +66,22 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                 const [err3, members] = await as(this.listMembers(group.id));
                 if (err3 || !members) return Promise.reject(err3);
                 
-                group.subGroups = members.filter(member => member.type === 'GROUP').map(subGroup => subGroup.id);
-                group.users = members.filter(member => member.type === 'USER').map(user => user.id);
+                group.subGroups = members.filter(member => member.type === 'GROUP').map(subGroup => {
+                    const parsedSubGroup: Partial<Member> = {};
+                    for (const field of this.defaultMemberFields) {
+                        //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
+                        parsedSubGroup[field] = subGroup[field];
+                    }
+                    return parsedSubGroup as Member;
+                });
+                group.users = members.filter(member => member.type === 'USER').map(user => {
+                    const parsedUser: Partial<Member> = {};
+                    for (const field of this.defaultMemberFields) {
+                        //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
+                        parsedUser[field] = user[field];
+                    }
+                    return parsedUser as Member;
+                });
                 return Promise.resolve(group as cGroup);
             });
             const [errAll, mappedGroups] = await as(Promise.all(memberPromises));
@@ -78,14 +91,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                 this.Cgroups[group.id] = group;
             }
             for (const user of users) {
-                // Parse primary email
-                for (const email of user.emails) {
-                    if (email.primary) {
-                        const {emails, ...Cuser} = {...user, email: email.address as string};
-                        this.Cusers[user.id] = Cuser;
-                        break;
-                    }
-                }
+                this.Cusers[user.id] = user;
             }
             this.cached = true;
         }

@@ -28,6 +28,8 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         "description",
         "aliases",
         "nonEditableAliases",
+        "subGroups",
+        "users"
     ];
     private readonly defaultUserFields: (keyof User)[] = [
         "id",

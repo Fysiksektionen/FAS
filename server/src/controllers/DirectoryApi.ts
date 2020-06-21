@@ -174,4 +174,213 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         return users;
     }
 
+
+
+    public async createGroup(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.groups.insert(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const group = res.data;
+        this.Cgroups[group.id] = {subGroups: [], users: []}; // set new empty group in cache
+
+        return group;
+    }
+
+    public async deleteGroup(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.groups.delete(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const groupIdToRemove = opts.groupKey as string;
+        const emptyResponse = res.data;
+        delete this.Cgroups[groupIdToRemove]; // remove group in cache
+        for (const id in this.Cgroups) {      // remove all entires with this id
+            const groupElements = this.Cgroups[id].subGroups;
+            for(let i = 0; i < groupElements.length; i++) { // check each subgroup and remove
+                if(groupElements[i].id === groupIdToRemove) { // member.id is the same as groupId
+                    delete groupElements[i];
+                }
+            }
+        }
+
+        return emptyResponse;
+    }
+
+    public async editGroupInfo(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.groups.patch(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const group = res.data;
+        this.Cgroups[group.id].email = group.email;
+        this.Cgroups[group.id].name = group.name;
+        this.Cgroups[group.id].description = group.description;
+
+        return group;
+    }
+
+
+    public async addAliasToGroup(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.groups.aliases.insert(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const groupKey = opts.groupKey as string;
+        const alias = opts.alias as string;
+        this.Cgroups[groupKey].aliases.push(alias);
+        const alias_res = res.data;
+
+        return alias_res;
+    }
+
+    public async removeAliasFromGroup(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.groups.aliases.delete(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const groupKey = opts.groupKey as string;
+        const alias = opts.alias as string;
+        const index = this.Cgroups[groupKey].aliases.indexOf(alias);
+        delete this.Cgroups[groupKey].aliases[index];
+        const void_ = res.data;
+
+        return void_;
+    }
+
+
+    public async addMember(opts: basicDict, isGroup: boolean) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.members.insert(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const groupKey = opts.groupKey as string;
+        const group = this.Cgroups[groupKey];
+        const memberResponse = res.data;
+        // ID of memeber is the id of the group/user
+        const member : Member = {id: memberResponse.id, role: memberResponse.role, delivery_settings: memberResponse.delivery_settings};
+        if(isGroup) 
+            group.subGroups.push(member);
+        else 
+            group.users.push(member);
+
+        return memberResponse;
+    }
+
+    public async removeMember(opts: basicDict, isGroup: boolean) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.members.delete(opts));
+        if (err) return Promise.reject(err);
+        
+        // success
+        const groupKey = opts.groupKey as string;
+        const group = this.Cgroups[groupKey];
+        const memberKey = opts.memberKey as string;
+        const findMemberIndex = (e:Member) => e.id === memberKey;
+        if(isGroup) {
+            const index = group.subGroups.findIndex(findMemberIndex)
+            delete group.subGroups[index];
+        }
+        else {
+            const index = group.users.findIndex(findMemberIndex);
+            delete group.users[index];
+        }
+        
+        const void_ = res.data;
+
+        return void_;
+    }
+
+    public async editMember(opts: basicDict, isGroup: boolean) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.members.patch(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const member = res.data;
+        const parentID = opts.groupKey as string;
+        const parent = this.Cgroups[parentID];
+        let memberList;
+        if(isGroup) {
+            memberList = parent.subGroups;
+        }
+        else {
+            memberList = parent.users;
+        }
+
+        for(let i = 0; i < memberList.length; i++) {
+            if(memberList[i].id === member.id) {
+                memberList[i].role = member.role;
+                memberList[i].delivery_settings = member.delivery_settings;
+            }
+        }
+
+        return member;
+    }
+
+
+    public async createUser(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.users.insert(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const user = res.data;
+        this.Cusers[user.id] = user;
+
+        return user;
+    }
+
+    public async deleteUser(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.users.delete(opts));
+        if (err) return Promise.reject(err);
+
+        // success
+        const userKey = opts.userKey as string;
+        delete this.Cusers[userKey];
+        for (const id in this.Cgroups) {      // remove all entires with this id
+            const users = this.Cgroups[id].users;
+            for(let i = 0; i < users.length; i++) { // check each user and remove
+                if(users[i].id === userKey) {
+                    delete users[i];
+                }
+            }
+        }
+
+        const void_ = res.data;
+        
+        return void_;
+    }
+
+    public async editUser(opts: basicDict) {
+        opts = {...this.defaultRequestOpts, ...opts};
+
+        const [err, res] = await as(this.users.update(opts)); // don't use patch for performance in just this instance
+        if (err) return Promise.reject(err);
+
+        // success
+        const user = res.data;
+        this.Cusers[user.id] = user; // as normal google user
+
+        return user;
+    }
+
+
 }

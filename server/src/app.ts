@@ -81,6 +81,23 @@ switch (app.get("env")){
 /* API routes */
 app.use("/api/", casAuth.block)  // middleware to block every unauthorized api request
 app.get("/api/directory/map", apiController.getMap)
+
+// correlates to the api.ts, DirectoryApi.ts
+// could use post for every one.
+app.post("/api/directory/creategroup", apiController.createGroup)
+app.delete("/api/directory/removegroup", apiController.deleteGroup)
+app.patch("/api/directory/editgroup", apiController.editGroupInfo)
+app.post("/api/directory/addmember", apiController.addMember)
+app.delete("/api/directory/removemember", apiController.removeMember)
+app.patch("/api/directory/editmember", apiController.editMember)
+app.post("/api/directory/createuser", apiController.createUser)
+app.delete("/api/directory/deleteuser", apiController.deleteUser)
+app.put("/api/directory/edituser", apiController.editUser)
+
+app.post("/api/directory/addaliastogroup", apiController.addAliasToGroup)
+app.post("/api/directory/removealiasfromgroup", apiController.removeAliasFromGroup)
+
+
 app.get("/api/me", (req,res) => res.json({authenticated: true, name:req.session['cas_user'], data:req.session}))
 
 /* Other routes */

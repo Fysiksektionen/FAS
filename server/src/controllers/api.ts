@@ -73,7 +73,8 @@ export const editGroupInfo = async(req: Request, res: Response) => {
     }
 
     const patch = req.body;
-    const [err, success] = await as(directoryApi.editGroupInfo(patch));
+    const groupKey = req.body.groupKey;
+    const [err, success] = await as(directoryApi.editGroupInfo({groupKey: req.body.groupKey, requestBody: req.body}));
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not edit group.", error: err});
@@ -91,7 +92,7 @@ export const addAliasToGroup = async(req: Request, res: Response) => {
 
     //let email2 = req.body.email + '@f.kth.se'; // check if automatically adds the secondary ones
 
-    const [err, success] = await as(directoryApi.addAliasToGroup(req.body)); // {groupKey: groupKey, alias: email}
+    const [err, success] = await as(directoryApi.addAliasToGroup({groupKey: req.body.groupKey, requestBody: {alias: req.body.alias}})); // {groupKey: groupKey, alias: email}
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not add alias to group.", error: err});
@@ -123,10 +124,10 @@ export const addMember = async(req: Request, res: Response) => {
         return;
     }
 
-    const parent = req.body.groupKey;
+    const parentKey = req.body.groupKey;
     const child = req.body.member; // {id: group/user ID, role: X, delivery_settings: X}
     const isGroup = req.body.isGroup;
-    const [err, success] = await as(directoryApi.addMember({groupKey: parent, requestBody: child}, isGroup));
+    const [err, success] = await as(directoryApi.addMember({groupKey: parentKey, requestBody: child}, isGroup));
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not add to group.", error: err});
@@ -142,10 +143,10 @@ export const removeMember = async(req: Request, res: Response) => {
         return;
     }
 
-    const groupKey = req.body.groupKey;
+    const parentKey = req.body.groupKey;
     const memberKey = req.body.memberKey; // not email, the actual member.id field
     const isGroup = req.body.isGroup;
-    const [err, success] = await as(directoryApi.removeMember({groupKey: groupKey, memberKey: memberKey}, isGroup));
+    const [err, success] = await as(directoryApi.removeMember({groupKey: parentKey, memberKey: memberKey}, isGroup));
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not remove from group.", error: err});
@@ -161,12 +162,16 @@ export const editMember = async(req: Request, res: Response) => {
         return;
     }
 
-    const groupKey = req.body.groupKey;
+    const parentKey = req.body.groupKey;
     const childID = req.body.memberKey;
     const role = req.body.role;
     const delivery_settings = req.body.delivery_settings;
+    const patch:any = {};
+    if(role) patch.role = role;
+    if(delivery_settings) patch.delivery_settings = delivery_settings;
     const isGroup = req.body.isGroup;
-    const [err, success] = await as(directoryApi.editMember({groupKey: groupKey, memberKey: childID, requestBody: {role: role, delivery_settings: delivery_settings}}, isGroup));
+
+    const [err, success] = await as(directoryApi.editMember({groupKey: parentKey, memberKey: childID, requestBody: patch}, isGroup));
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not edit member.", error: err});
@@ -183,7 +188,7 @@ export const createUser = async(req: Request, res: Response) => {
     }
 
     const data = req.body;
-    data.password = makeid(24); // make random password
+    data.password = makeRandomString(24); // make random password
     const [err, success] = await as(directoryApi.createUser(data));
     if (err) {
         console.log(err);
@@ -252,7 +257,7 @@ const checkUserPermission = (req: Request) : boolean => {
 
 
 
-function makeid(length: number): string {
+function makeRandomString(length: number): string {
     let result           = '';
     let characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let charactersLength = characters.length;

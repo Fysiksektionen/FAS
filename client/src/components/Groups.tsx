@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { APIService } from '../../../shared/types/APIService'
-import { GroupNodeResponse } from '../../../shared/types/GroupNode'
+import { Group } from '../../../shared/types/GroupNode'
 import { GroupNode } from './GroupNode'
 import './Groups.css'
 
@@ -8,7 +8,7 @@ import './Groups.css'
 // custom hooks: https://reactjs.org/docs/hooks-custom.html
 const useGetGroupAPI = () => {
     // initialise state result with a Service taking a list of GroupNodeResponse with status loading
-    const [result, setResult] = useState<APIService<GroupNodeResponse[]>>({
+    const [result, setResult] = useState<APIService<Group[]>>({
         status: 'loading'
     })
     useEffect(() => {

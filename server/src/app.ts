@@ -85,7 +85,7 @@ app.get("/api/directory/map", apiController.getMap)
 // correlates to the api.ts, DirectoryApi.ts
 // could use post for every one.
 app.post("/api/directory/creategroup", apiController.createGroup)
-app.delete("/api/directory/removegroup", apiController.deleteGroup)
+app.delete("/api/directory/deletegroup", apiController.deleteGroup)
 app.patch("/api/directory/editgroup", apiController.editGroupInfo)
 app.post("/api/directory/addmember", apiController.addMember)
 app.delete("/api/directory/removemember", apiController.removeMember)

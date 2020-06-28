@@ -7,6 +7,7 @@ import { Group, User, Member } from '../../../shared/types/GroupNode';
 interface cGroup extends admin_directory_v1.Schema$Group {
     subGroups: Member[];
     users: Member[];
+    externalUsers: Member[];
 }
 interface cUser extends admin_directory_v1.Schema$User {
 
@@ -29,7 +30,8 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         "aliases",
         "nonEditableAliases",
         "subGroups",
-        "users"
+        "users",
+        "externalUsers",
     ];
     private readonly defaultUserFields: (keyof User)[] = [
         "id",
@@ -42,8 +44,9 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
     ];
     private readonly defaultMemberFields: (keyof Member)[] = [
         "id",
+        "email",
         "role",
-        "delivery_settings"
+        "delivery_settings",
     ];
 
     constructor(public domain: string, opts: Partial<admin_directory_v1.Options>) {
@@ -64,6 +67,11 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
             const [err2, users] = await as(this.listUsers(opts));
             if (err2) return Promise.reject(err2);
 
+            this.Cusers = {};
+            for (const user of users) {
+                this.Cusers[user.id] = user;
+            }
+
             const memberPromises = groups.map(async (group: Partial<cGroup>) => {
                 const [err3, members] = await as(this.listMembers(group.id));
                 if (err3 || !members) return Promise.reject(err3);
@@ -76,7 +84,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                     }
                     return parsedSubGroup as Member;
                 });
-                group.users = members.filter(member => member.type === 'USER').map(user => {
+                group.users = members.filter(member => member.type === 'USER' && !!this.Cusers[member.id]).map(user => {
                     const parsedUser: Partial<Member> = {};
                     for (const field of this.defaultMemberFields) {
                         //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
@@ -84,16 +92,22 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                     }
                     return parsedUser as Member;
                 });
+                group.externalUsers = members.filter(member => member.type === 'USER' && !this.Cusers[member.id]).map(externalUser => {
+                    const parsedExternalUser: Partial<Member> = {};
+                    for (const field of this.defaultMemberFields) {
+                        //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
+                        parsedExternalUser[field] = user[field];
+                    }
+                    return parsedExternalUser as Member;
+                });
                 return Promise.resolve(group as cGroup);
             });
             const [errAll, mappedGroups] = await as(Promise.all(memberPromises));
             if (errAll) return Promise.reject({mesg: "listMembers", error: errAll});
             
+            this.Cgroups = {};
             for (const group of mappedGroups) {
                 this.Cgroups[group.id] = group;
-            }
-            for (const user of users) {
-                this.Cusers[user.id] = user;
             }
             this.cached = true;
         }

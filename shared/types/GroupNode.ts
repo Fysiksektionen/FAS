@@ -23,7 +23,8 @@ export interface User {
 }
 
 export interface Member {
-    id: string,
+	id: string,
+	email: string,
     role: string,
     delivery_settings: string
 }
@@ -31,6 +32,7 @@ export interface Member {
 export interface Group extends CommonGroup {
 	subGroups: Member[],
 	users: Member[],
+	externalUsers: Member[]
 }
 
 // export interface GroupNodeResponse extends CommonGroup {

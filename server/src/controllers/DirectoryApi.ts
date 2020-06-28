@@ -3,6 +3,7 @@ import { admin_directory_v1 } from 'googleapis';
 import { as } from './asyncUtil';
 import { basicDict } from '../../../shared/types/common';
 import { Group, User, Member } from '../../../shared/types/GroupNode';
+import { defaultMemberFields, defaultGroupFields, defaultUserFields } from '../../../shared/types/Fields';
 import { allDomains } from '../credentials';
 
 interface cGroup extends admin_directory_v1.Schema$Group {
@@ -23,32 +24,8 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         domain: this.domain,
         maxResults: 500,
     };
-    private readonly defaultGroupFields: (keyof Group)[] = [
-        "id",
-        "email",
-        "name",
-        "description",
-        "aliases",
-        "nonEditableAliases",
-        "subGroups",
-        "users",
-        "externalUsers",
-    ];
-    private readonly defaultUserFields: (keyof User)[] = [
-        "id",
-        "primaryEmail",
-        "name",
-        "isAdmin",
-        "lastLoginTime",
-        "creationTime",
-        "orgUnitPath",
-    ];
-    private readonly defaultMemberFields: (keyof Member)[] = [
-        "id",
-        "email",
-        "role",
-        "delivery_settings",
-    ];
+
+
 
     constructor(public domain: string, opts: Partial<admin_directory_v1.Options>) {
         super({version: 'directory_v1', ...opts});
@@ -79,7 +56,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                 
                 group.subGroups = members.filter(member => member.type === 'GROUP').map(subGroup => {
                     const parsedSubGroup: Partial<Member> = {};
-                    for (const field of this.defaultMemberFields) {
+                    for (const field of defaultMemberFields) {
                         //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
                         parsedSubGroup[field] = subGroup[field];
                     }
@@ -87,7 +64,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                 });
                 group.users = members.filter(member => member.type === 'USER' && !!this.Cusers[member.id]).map(user => {
                     const parsedUser: Partial<Member> = {};
-                    for (const field of this.defaultMemberFields) {
+                    for (const field of defaultMemberFields) {
                         //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
                         parsedUser[field] = user[field];
                     }
@@ -95,7 +72,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                 });
                 group.externalUsers = members.filter(member => member.type === 'USER' && !this.Cusers[member.id]).map(externalUser => {
                     const parsedExternalUser: Partial<Member> = {};
-                    for (const field of this.defaultMemberFields) {
+                    for (const field of defaultMemberFields) {
                         //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
                         parsedExternalUser[field] = user[field];
                     }
@@ -117,7 +94,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         for (const id in this.Cgroups) {
             const Cgroup = this.Cgroups[id];
             const group: Partial<Group> = {};
-            for (const field of this.defaultGroupFields) {
+            for (const field of defaultGroupFields) {
                 //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
                 group[field] = Cgroup[field];
             }
@@ -128,7 +105,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         for (const id in this.Cusers) {
             const Cuser = this.Cusers[id];
             const user: Partial<User> = {};
-            for (const field of this.defaultUserFields) {
+            for (const field of defaultUserFields) {
                 //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
                 user[field] = Cuser[field];
             }

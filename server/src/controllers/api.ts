@@ -125,9 +125,9 @@ export const addMember = async(req: Request, res: Response) => {
     }
 
     const parentKey = req.body.groupKey;
-    const child = req.body.member; // {id: group/user ID, role: X, delivery_settings: X}
-    const isGroup = req.body.isGroup;
-    const [err, success] = await as(directoryApi.addMember({groupKey: parentKey, requestBody: child}, isGroup));
+    const child = req.body.member; // {email: X}
+    const email = req.body.member.email;
+    const [err, success] = await as(directoryApi.addMember({groupKey: parentKey, requestBody: child}, email));
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not add to group.", error: err});
@@ -145,8 +145,7 @@ export const removeMember = async(req: Request, res: Response) => {
 
     const parentKey = req.body.groupKey;
     const memberKey = req.body.memberKey; // not email, the actual member.id field
-    const isGroup = req.body.isGroup;
-    const [err, success] = await as(directoryApi.removeMember({groupKey: parentKey, memberKey: memberKey}, isGroup));
+    const [err, success] = await as(directoryApi.removeMember({groupKey: parentKey, memberKey: memberKey}));
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not remove from group.", error: err});
@@ -169,9 +168,8 @@ export const editMember = async(req: Request, res: Response) => {
     const patch:any = {};
     if(role) patch.role = role;
     if(delivery_settings) patch.delivery_settings = delivery_settings;
-    const isGroup = req.body.isGroup;
 
-    const [err, success] = await as(directoryApi.editMember({groupKey: parentKey, memberKey: childID, requestBody: patch}, isGroup));
+    const [err, success] = await as(directoryApi.editMember({groupKey: parentKey, memberKey: childID, requestBody: patch}));
     if (err) {
         console.log(err);
         res.json({error_msg: "Could not edit member.", error: err});
@@ -233,7 +231,6 @@ export const editUser = async(req: Request, res: Response) => {
 }
 
 
-// Google does this.
 /*const checkIfEmailIsAvailable = async(email: string) : Promise<boolean> => {
     const [err, success] = await as(directoryApi.getGroup({groupKey: email}));
     let error = err as any;

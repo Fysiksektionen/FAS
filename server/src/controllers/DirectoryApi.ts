@@ -3,6 +3,7 @@ import { admin_directory_v1 } from 'googleapis';
 import { as } from './asyncUtil';
 import { basicDict } from '../../../shared/types/common';
 import { Group, User, Member } from '../../../shared/types/GroupNode';
+import { allDomains } from '../credentials';
 
 interface cGroup extends admin_directory_v1.Schema$Group {
     subGroups: Member[];
@@ -198,7 +199,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
 
         // success
         const group = res.data;
-        this.Cgroups[group.id] = {subGroups: [], users: []}; // set new empty group in cache
+        this.Cgroups[group.id] = {subGroups: [], users: [], externalUsers: []}; // set new empty group in cache
 
         return group;
     }
@@ -273,8 +274,20 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
     }
 
 
-    public async addMember(opts: basicDict, isGroup: boolean) {
+    public async addMember(opts: basicDict, email: string) {
         opts = {...this.defaultRequestOpts, ...opts};
+
+        // check if adding an email that exist on domain, else it is an external user and google will take care of that.
+        let isExternal = true;
+        for(let i = 0; i < allDomains.length; i++) {
+            if(email.endsWith(allDomains[i])) {
+                isExternal = false;
+                if(!(this.checkIfEmailExistInCache(email, false) || this.checkIfEmailExistInCache(email, true))) {
+                    Promise.reject("No such user/group")
+                }
+            }
+        }
+        
 
         const [err, res] = await as(this.members.insert(opts));
         if (err) return Promise.reject(err);
@@ -284,16 +297,19 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         const group = this.Cgroups[groupKey];
         const memberResponse = res.data;
         // ID of memeber is the id of the group/user
-        const member : Member = {id: memberResponse.id, role: memberResponse.role, delivery_settings: memberResponse.delivery_settings};
-        if(isGroup) 
+        const member : Member = {id: memberResponse.id, email: memberResponse.email, role: memberResponse.role, delivery_settings: memberResponse.delivery_settings};
+        const isGroup = this.isAGroupID(memberResponse.id);
+        if(isExternal)
+            group.externalUsers.push(member);
+        else if(isGroup) 
             group.subGroups.push(member);
-        else 
+        else
             group.users.push(member);
 
         return memberResponse;
     }
 
-    public async removeMember(opts: basicDict, isGroup: boolean) {
+    public async removeMember(opts: basicDict) {
         opts = {...this.defaultRequestOpts, ...opts};
 
         const [err, res] = await as(this.members.delete(opts));
@@ -303,14 +319,20 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         const groupKey = opts.groupKey as string;
         const group = this.Cgroups[groupKey];
         const memberKey = opts.memberKey as string;
+        const isGroup = this.isAGroupID(memberKey);
+        const isUser = this.isAUserID(memberKey);
         const findMemberIndex = (e:Member) => e.id === memberKey;
         if(isGroup) {
             const index = group.subGroups.findIndex(findMemberIndex)
             delete group.subGroups[index];
         }
-        else {
+        else if(isUser) {
             const index = group.users.findIndex(findMemberIndex);
             delete group.users[index];
+        }
+        else {
+            const index = group.externalUsers.findIndex(findMemberIndex);
+            delete group.externalUsers[index];
         }
         
         const void_ = res.data;
@@ -318,7 +340,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         return void_;
     }
 
-    public async editMember(opts: basicDict, isGroup: boolean) {
+    public async editMember(opts: basicDict) {
         opts = {...this.defaultRequestOpts, ...opts};
 
         const [err, res] = await as(this.members.patch(opts));
@@ -328,12 +350,17 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         const member = res.data;
         const parentID = opts.groupKey as string;
         const parent = this.Cgroups[parentID];
+        const isGroup = this.isAGroupID(member.id);
+        const isUser = this.isAUserID(member.id);
         let memberList;
         if(isGroup) {
             memberList = parent.subGroups;
         }
-        else {
+        else if(isUser) {
             memberList = parent.users;
+        }
+        else {
+            memberList = parent.externalUsers;
         }
 
         for(let i = 0; i < memberList.length; i++) {
@@ -396,5 +423,25 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
         return user;
     }
 
+
+    checkIfEmailExistInCache(email: string, isGroup: boolean) : boolean {
+        let dic;
+        if(isGroup)  dic = this.Cgroups;
+        else  dic = this.Cusers;
+        for (const [key, value] of Object.entries(dic)) {
+            if(value.email === email) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    isAGroupID(id: string) : boolean {
+        return id in this.Cgroups;
+    }
+
+    isAUserID(id: string) : boolean {
+        return id in this.Cusers;
+    }
 
 }

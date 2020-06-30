@@ -12,7 +12,9 @@ const Header : React.FC<HeaderProps> = (props: HeaderProps) => {
             <div className="title">
                 <img src={process.env.PUBLIC_URL + '/icon_menu64.png'} alt=""
                     onClick={() => props.expandSidenav()}></img>
-                <h3 onClick={() => props.expandSidenav()}>FAS</h3>
+                <a href="/">
+                    <h3>FAS</h3>
+                </a>
             </div>
             <div className="page-title">
                 <h2>{props?.pageTitle}</h2>

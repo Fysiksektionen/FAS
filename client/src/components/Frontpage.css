@@ -3,36 +3,19 @@
 }
 .center h1 {
     font-size: 130px;
-    margin: 0 0 0 0;
+    margin: 0;
     padding: 10% 0 0 0;
     text-shadow: 4px 4px #ff642b;
 }
 .center h2 {
     margin: 10px 0 60px 0;
 }
-.center button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 15px 32px;
-    margin-bottom: 15px;
-    position: relative;
-    font-size: 20px;
-    box-shadow: 4px 4px lightgreen;
-    cursor: pointer;
-}
-.center button:hover {
-    background: #3e8e41;
-}
-.center button:active {
-  box-shadow: 2px 2px lightgreen;
-  transform: translate3d(2px, 2px, 0)
-}
 .footer {
     bottom: 0;
     position: fixed;
     width: 100%;
     margin-bottom: 5px;
+    overflow-y: scroll;
 }
 .footer p {
     margin: 0;

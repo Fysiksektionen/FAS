@@ -12,7 +12,7 @@
   box-shadow: 0px 0px 7px 0 var(--color-surface-dark);
 }
 .sidenav h2 {
-  width: calc(250px*3/4); /* ej dynamisk bredd, störig animation */
+  width: calc(250px*3/4);
   transition: 0.3s;
   padding: 8px 32px 8px 32px;
   margin-top: 50px;
@@ -38,41 +38,5 @@
   width: 24px;
   padding-right: 32px;
 }
-
-/***********************************************
- *                Close icon                   *
- ***********************************************/
-.sidenav-close {
-    margin-top: 0px;
-}
-.sidenav-close-cross {
-    position: absolute;
-    left: 202px; /* 250-16-32 , make the position fixed from the left */
-    top: 8px;
-    width: 32px;
-    height: 32px;
-    opacity: .8;
-    padding: 0;
-    padding-left: 0px;
-    margin: 0;
-    cursor: pointer;
-  }
-  .sidenav-close-cross:hover {
-    opacity: 1;
-  }
-  .sidenav-close-cross:before, .sidenav-close-cross:after {
-    position: absolute;
-    left: 15px; 
-    content: ' ';
-    height: 33px;
-    width: 2px;
-    background-color :white;
-  }
-  .sidenav-close-cross:before {
-    transform: rotate(45deg);
-  }
-  .sidenav-close-cross:after {
-    transform: rotate(-45deg);
-  }
   
 

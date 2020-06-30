@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './Frontpage.css'
+
+
 
 export const Frontpage: React.FC = () => {
     return (
@@ -7,11 +9,11 @@ export const Frontpage: React.FC = () => {
             <h1>FAS</h1>
             <h2>Fysiksektionens administratörssystem</h2>
             <form action="/login">
-                <button type="submit">Logga in</button>
+                <button className="btn-large" type="submit">Login</button>
             </form>
-            <form action="/???">
-                <button type="submit">???</button>
-            </form>
+            <a href="//f.kth.se">
+                <button className="btn-large">Homepage</button>
+            </a>
             <div className='footer'>
                 <p>By F.dev 2020</p>
                 <a href="mailto:webmaster@f.kth.se">webmaster@f.kth.se</a>

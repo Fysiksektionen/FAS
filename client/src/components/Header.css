@@ -1,17 +1,39 @@
 .header {
+    position: fixed;
     top: 0;
     width: 100%;
+    z-index: 1000;
     background-color: var(--color-font-light);
     border-bottom: 1px solid var(--color-surface-dark);
     box-shadow: 0 0 7px 0 var(--color-surface-dark);
+    display: flex;
   }
 .title {
-    padding: 8px 32px 8px 48px;
+    padding: 8px 48px 8px 48px;
     font-size: 36px;
+    display: flex;
 }
 .title h3 {
-  cursor: pointer;
-  margin: 0;
-  color: var(--color-orange);
-  width: fit-content;
+    cursor: pointer;
+    margin: 0;
+    color: var(--color-orange);
+    width: fit-content;
+}
+.title img {
+    cursor: pointer;
+    height: 50px;
+    padding-right: 20px;
+}
+
+/*@media (hover: none) and (pointer: coarse) {*/
+@media (max-width: 800px) {
+    .title {
+        padding: 8px 22px 8px 22px;
+    }
+    .page-title h2{
+        margin-left: 0;
+    }
+    .page-title {
+        margin: auto;
+    }
 }

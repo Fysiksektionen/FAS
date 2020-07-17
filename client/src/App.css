@@ -18,8 +18,79 @@
   font-family: 'Libre Franklin', sans-serif;
 }
 
-.content {
-  display: flex;
-  justify-content: center;
-  height: 100vh;
+a {
+    color: var(--color-orange); 
+    text-decoration: none;
+}
+
+
+
+/**
+     Buttons   
+**/
+button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    margin: 10px;
+    font-size: 16px;
+    padding: 10px;
+    position: relative;
+    box-shadow: 4px 4px lightgreen;
+    cursor: pointer;
+    -webkit-transition: all 0.15s ease-in-out;
+    transition: all 0.15s ease-in-out;
+}
+button:hover {
+    background: #3e8e41;
+    -webkit-transform: translateY(-2px);
+            transform: translateY(-2px);
+}
+button:active {
+    box-shadow: 2px 2px lightgreen;
+    transform: translate3d(2px, 2px, 0)
+}
+button:focus {outline: 0;}
+
+.btn-red {
+    background: red;
+    box-shadow: 4px 4px rgb(255, 100, 0);
+}
+.btn-red:hover {
+    background: rgb(210, 0, 0)
+}
+.btn-red:active {
+    box-shadow: 2px 2px rgb(255, 100, 0);
+}
+
+.btn-blue {
+    box-shadow: 4px 4px skyblue;
+    background-color: dodgerblue;
+}
+.btn-blue:hover {
+    background: #106FF0;  /*dodgerblue  -  (1e90ff)*/;
+}
+.btn-blue:active {
+    box-shadow: 2px 2px skyblue;
+}
+
+/* .btn-small {
+    margin: 10px;
+    font-size: 16px;
+    padding: 10px;
+} */
+.btn-large {
+    font-size: 20px;
+    margin: 15px 32px;
+    padding: 15px;
+}
+
+
+
+@media (max-width: 800px) {
+    button {
+        font-size: 18px;
+        padding: 7px 22px;
+    }
 }

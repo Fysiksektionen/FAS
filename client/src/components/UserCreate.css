@@ -1,0 +1,49 @@
+.usercreate {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    overflow-y: scroll;
+}
+.usercreate-inner {
+    position: absolute;
+    left: 30%;
+    right: 30%;
+    top: 15%;
+    bottom: 15%;
+    margin: auto;
+    background: var(--color-font-light);;
+    border-radius: 3px;
+    padding: 30px;
+}
+.usercreate .cross {
+    top: 10px;
+    right: 10px;
+    background: black;
+}
+.usercreate input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.usercreate #email {
+    width: 50%;
+}
+.usercreate label {
+    padding-top: 20px;
+}
+
+@media (max-width: 800px) {
+    .usercreate-inner {
+        left: 5%;
+        right: 5%;
+        top: 12%;
+        bottom: 3%;
+    }
+}

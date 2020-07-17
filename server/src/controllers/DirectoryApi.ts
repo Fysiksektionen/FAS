@@ -96,7 +96,7 @@ export default class DirectoryApi extends admin_directory_v1.Admin {
                     const parsedExternalUser: Partial<Member> = {};
                     for (const field of this.defaultMemberFields) {
                         //@ts-ignore - TS doesnt check each iteration, creating unions and intersections
-                        parsedExternalUser[field] = user[field];
+                        parsedExternalUser[field] = externalUser[field];
                     }
                     return parsedExternalUser as Member;
                 });

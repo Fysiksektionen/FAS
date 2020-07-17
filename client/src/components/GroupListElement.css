@@ -1,0 +1,92 @@
+.groupnode {
+    background-color: #efefef;
+    margin-left: 0px;
+    margin-top: 15px;
+    min-width: 300px;
+    min-height: 50px;
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.group-name {
+    min-height: 100%;
+    width: 400px;
+    font-size: 22px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    overflow: hidden;
+    margin: 0;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.group-email {
+    min-height: 100%;
+    /*width: 350px;*/ /* will be cut of by buttons */
+    font-size: 20px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    overflow: hidden;
+    margin: 0;
+    padding-left: 1em;
+    padding-right: 0.4em;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-style: italic;
+}
+
+.group-addmember-button {
+    margin-left: auto;
+    height: 100%;
+    max-width: 240px;
+    display: flex;
+    flex-direction: column; 
+}
+.group-edit-button {
+    margin: 0;
+    height: 100%;
+    max-width: 240px;
+    display: flex;
+    flex-direction: column; 
+}   
+
+.groupnode button {
+    height: 90%;
+    margin: 10px;
+    font-size: 16px;
+    padding: 10px;
+}
+
+
+@media (max-width: 800px) /*or for touch: (hover: none) and (pointer: coarse)*/ {
+    .groupnode {
+        margin-top: 10px;
+        display: block;
+    }
+    .group-name {
+        display: inline;
+        margin-left: 13px;
+        top: 3px;
+        position: relative;
+    }
+    .group-email {
+        display: block;
+        margin-top: 4px;
+    }
+
+    div .expandButtonContainer {
+        display: inline !important;
+    }
+    .expandButton {
+        display: inline !important;
+    }
+    .group-addmember-button, .group-edit-button {
+        display: inline !important;
+    }
+}

@@ -1,0 +1,20 @@
+.userlist {
+    margin: 20px;
+}
+.userlist input[type=text] {
+    font-size: 20px;
+    padding: 4px;
+    margin: 0 12px 0 24px;
+}
+
+@media (max-width: 800px) {
+    .userlist {
+        margin: 16px;
+    }
+    .userlist input[type=text] {
+        font-size: 18px;
+        display: block;
+        margin: 0 0 10px;
+        width: calc(100% - 12px);
+    }
+}

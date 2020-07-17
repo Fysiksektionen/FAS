@@ -36,7 +36,7 @@ class GroupList extends React.Component<{}, State> {
             filterEmail: true,
             sortedAs: 'default',
             apiService: {status: 'loading'},
-            showGroupCreateForm: true
+            showGroupCreateForm: false
         }
         // Bind searchbar callback.
         this.handleChange = this.handleChange.bind(this);

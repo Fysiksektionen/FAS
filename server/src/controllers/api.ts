@@ -29,7 +29,7 @@ export const createGroup = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.createGroup( {requestBody: req.body} ));
     if(err) { // error while creating group
         console.log(err);
-        res.json({error_msg: "Could not create group.", error: err});
+        sendError(res, "Could not create group.", err);
         return;
     }
 
@@ -41,13 +41,14 @@ export const createGroup = async(req: Request, res: Response) => {
             const [err2, success2] = await as(directoryApi.addAlias({groupKey: groupKey, alias: emailNoDomain + emailDomain}));
             if(err2) {
                 console.log(err2);
-                res.json({error_msg: "Could not add alias to group.", error: err2});
+                sendError(res, "Could not add alias to group.", error: err2});
                 return;
             }
         }
     }*/
 
-    res.json({success: success}); // just wrap it, so it can be easily checked for success on frontend.
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const deleteGroup = async(req: Request, res: Response) => {
@@ -59,11 +60,12 @@ export const deleteGroup = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.deleteGroup(req.body)); // {groupKey: groupKey}
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not remove group.", error: err});
+        sendError(res, "Could not remove group.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const editGroupInfo = async(req: Request, res: Response) => {
@@ -77,11 +79,12 @@ export const editGroupInfo = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.editGroupInfo({groupKey: req.body.groupKey, requestBody: req.body}));
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not edit group.", error: err});
+        sendError(res, "Could not edit group.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const addAliasToGroup = async(req: Request, res: Response) => {
@@ -95,11 +98,12 @@ export const addAliasToGroup = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.addAliasToGroup({groupKey: req.body.groupKey, requestBody: {alias: req.body.alias}})); // {groupKey: groupKey, alias: email}
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not add alias to group.", error: err});
+        sendError(res, "Could not add alias to group.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const removeAliasFromGroup = async(req: Request, res: Response) => {
@@ -111,11 +115,12 @@ export const removeAliasFromGroup = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.removeAliasFromGroup(req.body)); // {groupKey: groupKey, alias: email}
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not remove alias from group.", error: err});
+        sendError(res, "Could not remove alias from group.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const addMember = async(req: Request, res: Response) => {
@@ -130,11 +135,12 @@ export const addMember = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.addMember({groupKey: parentKey, requestBody: child}, email));
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not add to group.", error: err});
+        sendError(res, "Could not add to group.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const removeMember = async(req: Request, res: Response) => {
@@ -148,11 +154,12 @@ export const removeMember = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.removeMember({groupKey: parentKey, memberKey: memberKey}));
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not remove from group.", error: err});
+        sendError(res, "Could not remove from group.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const editMember = async(req: Request, res: Response) => {
@@ -172,11 +179,12 @@ export const editMember = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.editMember({groupKey: parentKey, memberKey: childID, requestBody: patch}));
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not edit member.", error: err});
+        sendError(res, "Could not edit member.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const createUser = async(req: Request, res: Response) => {
@@ -190,11 +198,12 @@ export const createUser = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.createUser(data));
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not create user.", error: err});
+        sendError(res, "Could not create user.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const deleteUser = async(req: Request, res: Response) => {
@@ -206,11 +215,12 @@ export const deleteUser = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.deleteUser(req.body)); // {userKey: email}
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not delete user.", error: err});
+        sendError(res, "Could not delete user.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 export const editUser = async(req: Request, res: Response) => {
@@ -223,11 +233,12 @@ export const editUser = async(req: Request, res: Response) => {
     const [err, success] = await as(directoryApi.editUser({userKey: userID, requestBody: req.body}));
     if (err) {
         console.log(err);
-        res.json({error_msg: "Could not edit user.", error: err});
+        sendError(res, "Could not edit user.", err);
         return;
     }
 
-    res.json({success: success});
+    // sendSuccess(res, success)
+    sendSuccess(res, {}) // don't send anything, we don't need anything.
 }
 
 
@@ -252,6 +263,15 @@ const checkUserPermission = (req: Request) : boolean => {
     return true; // TODO
 }
 
+function sendSuccess(res: Response, response: any)  {
+    // Format:  { success: boolean, error?: { ... }, response?: { } }
+    res.json({success: true, response: response});
+}
+
+function sendError(res: Response, error_msg: string, error_object: any) {
+    // Format:  { success: boolean, error?: { ... }, response?: { } }
+    res.json({success: false, error: {error_msg: error_msg, error: error_object} });
+}
 
 
 function makeRandomString(length: number): string {
@@ -262,4 +282,4 @@ function makeRandomString(length: number): string {
        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
- }
+}

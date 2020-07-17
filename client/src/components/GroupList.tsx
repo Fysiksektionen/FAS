@@ -1,26 +1,26 @@
 import React from 'react';
 import { APIService } from '../../../shared/types/APIService'
-import { DirectoryMap, GroupWithChildren } from '../../../shared/types/GroupNode'
+import { DirectoryMap, Group } from '../../../shared/types/GroupNode'
 import GroupListElement from './GroupListElement'
-
 import Spinner          from './Spinner';
 import ErrorMessage     from './ErrorBox';
-
+import GroupCreate      from './GroupCreate';
 import QuickSort, {CompareFunction} from '../QuickSort'
-
+import { APIRequest, httpMethod, getGroupFilled } from '../App';
 import './GroupList.css'
 
 
 
 type State = {
     directoryMap: DirectoryMap,
-    groupsFiltered: GroupWithChildren[],
+    groupsFiltered: Group[],
     currentFilterWord: string,
     isFiltering: boolean,
     filterName: boolean,
     filterEmail: boolean,
-    sortedAs: string, // should probably be replaced with enum type
-    apiService: APIService<GroupWithChildren[]>
+    sortedAs: string,                   // TODO: replace with enum type
+    apiService: APIService<Group[]>,
+    showGroupCreateForm: boolean
 }
 
 class GroupList extends React.Component<{}, State> {
@@ -29,76 +29,39 @@ class GroupList extends React.Component<{}, State> {
         super(props);
         this.state = {
             directoryMap: {} as DirectoryMap,
-            groupsFiltered: [] as GroupWithChildren[],
+            groupsFiltered: [] as Group[],
             currentFilterWord: '',
             isFiltering: false,
             filterName: true, 
-            filterEmail: false,
+            filterEmail: true,
             sortedAs: 'default',
-            apiService: {status: 'loading'}
+            apiService: {status: 'loading'},
+            showGroupCreateForm: true
         }
         // Bind searchbar callback.
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
-        const baseURI = process.env.FAS_BASE_URI || "http://localhost:8080"
-        const resourceUrl = baseURI + '/api/directory/map'
-        fetch(resourceUrl)
-            .then(response => {
-                
-                if (response.status === 401) {  
-                    throw new Error("Unauthorized");
-                }
-                return response.json()
-            })
-            .then(response => {
-                // Update the directory map.
-                this.setState({
-                    directoryMap: response
-                });
-                // To allow filtering and sorting of groups, we create a
-                // GroupNodeResponse[]
-                var arr = [] as GroupWithChildren[];
-                Object.keys(response.groups).forEach(key => {
-                    const group: GroupWithChildren = {
-                        id: response.groups[key].id,
-                        name: response.groups[key].name,
-                        email: response.groups[key].email,
-                        description: response.groups[key].description,
-                        nonEditableAliases: [],
-                        subGroups: [],
-                        users: []
-                    }
-                    arr.push(group);
-                });
-
-                this.setState({
-                    apiService: {
-                        status: 'loaded',
-                        payload: arr
-                    },
-                    groupsFiltered: arr
-                });
-            })
-            .catch((error: Error) => {
-                if (error.message === "Unauthorized") {
-                    this.setState({ 
-                        apiService: {
-                            status: 'unauthorized'
-                        }
-                    });
-                }
-                else
-                {
-                    this.setState({ 
-                        apiService: {
-                            status: 'error',
-                            error: error 
-                        }
-                    });
-                }
+        APIRequest("directory/map", httpMethod.get).then(res => {
+            var arr = [] as Group[];
+            Object.keys(res.groups).forEach(key => {
+                arr.push(res.groups[key])
             });
+            this.setState({
+                directoryMap: res,
+                apiService: {
+                    status: 'loaded',
+                    payload: arr
+                },
+                groupsFiltered: arr
+            });
+        }).catch((error: Error) => {
+            if (error.message === "Unauthorized")
+                this.setState({ apiService: {status: 'unauthorized'} });
+            else
+                this.setState({ apiService: {status: 'error', error: error} });
+        });
     }
 
     handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -114,8 +77,8 @@ class GroupList extends React.Component<{}, State> {
          */
 
 
-        let currentList = this.state.apiService.status === 'loaded' ? this.state.apiService.payload : [] as GroupWithChildren[];
-        let newList = [] as GroupWithChildren[];
+        let currentList = this.state.apiService.status === 'loaded' ? this.state.apiService.payload : [] as Group[];
+        let newList = [] as Group[];
         let oldWord = this.state.currentFilterWord;
         let newWord = e.target.value;
         let isFiltering = (e.target.value.length >= 2);
@@ -165,18 +128,13 @@ class GroupList extends React.Component<{}, State> {
     }   
 
 
-    sortListWith(compare: CompareFunction<GroupWithChildren>) {
+    sortListWith(compare: CompareFunction<Group>) {
         let array = this.state.groupsFiltered;
         let low = 0;
         let high = array.length-1;
         QuickSort(array, low, high, compare);
-
-        // not really needed since 'sortedAs', gets updated.
-        /*this.setState({
-            groupsFiltered: array
-        });*/
     }
-    sortListBy(sortName: string, compareAscending: CompareFunction<GroupWithChildren>, compareDescending: CompareFunction<GroupWithChildren>) {
+    sortListBy(sortName: string, compareAscending: CompareFunction<Group>, compareDescending: CompareFunction<Group>) {
         if(this.state.sortedAs ===  sortName + ' Ascending') {
             this.sortListWith(compareDescending);
             this.setState({ sortedAs: sortName + ' Descending' });
@@ -211,7 +169,7 @@ class GroupList extends React.Component<{}, State> {
     return (
         <div className="grouplist">
 
-            <a href="/add-group"><button>Add group</button></a>
+            <a onClick={() => this.setState({showGroupCreateForm: true})}><button className="btn-large">Create group</button></a>
 
             <input type="text" placeholder="Search..." name="searchbar" id="searchbar" onChange={this.handleChange}></input>
 
@@ -220,21 +178,21 @@ class GroupList extends React.Component<{}, State> {
                 <span><svg width="12px" height="10px" viewBox="0 0 12 10">
                     <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                 </svg></span>
-                <span>Sök namn</span>
+                <span>Search by name</span>
             </label>
             <input className="input-checkbox" id="checkbox_email" type="checkbox" checked={this.state.filterEmail} onChange={()=>this.setState({filterEmail: !this.state.filterEmail})}/>
             <label className="checkbox" htmlFor="checkbox_email">
                 <span><svg width="12px" height="10px" viewBox="0 0 12 10">
                     <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                 </svg></span>
-                <span>Sök email</span>
+                <span>Search by email</span>
             </label>
 
             <br />
-            <button className="sort-button" onClick={()=>this.sortByName()}>Sort by name</button>
-            <button className="sort-button" onClick={()=>this.sortByEmail()}>Sort by email</button>
-            <button className="sort-button" onClick={()=>this.sortByGroupCount()}>Sort by subgroup count</button>
-            <button className="sort-button" onClick={()=>this.sortByUserCount()}>Sort by user count</button>
+            <button className="btn-blue" onClick={()=>this.sortByName()}>Sort by name</button>
+            <button className="btn-blue" onClick={()=>this.sortByEmail()}>Sort by email</button>
+            <button className="btn-blue" onClick={()=>this.sortByGroupCount()}>Sort by subgroup count</button>
+            <button className="btn-blue" onClick={()=>this.sortByUserCount()}>Sort by user count</button>
 
             <p>Found {this.state.groupsFiltered?.length} group(s)</p>
 
@@ -242,10 +200,16 @@ class GroupList extends React.Component<{}, State> {
 
             <div className="list">
                 {this.state.apiService.status === 'loading' && <Spinner/>}
-                {this.state.apiService.status === 'loaded' && this.state.groupsFiltered.map(g => <GroupListElement {...g} />)}
+                {this.state.apiService.status === 'loaded' && this.state.groupsFiltered.map(g => 
+                    <GroupListElement {...getGroupFilled(this.state.directoryMap, g)} />
+                )}
                 {this.state.apiService.status === 'unauthorized' && <ErrorMessage message="Unauthorized"/>}
-                {this.state.apiService.status === 'error' && <ErrorMessage message="Error: failed to load groups"/>}
+                {this.state.apiService.status === 'error' && <ErrorMessage message="Failed to load groups"/>}
             </div>
+
+            {/* Show Create Group-window if toggled */}
+            {this.state.showGroupCreateForm ? <GroupCreate closeCallback={() => this.setState({showGroupCreateForm: !this.state.showGroupCreateForm})} /> : null}
+
         </div>
     )}
 }

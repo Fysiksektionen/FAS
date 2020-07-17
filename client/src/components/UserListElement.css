@@ -1,63 +1,69 @@
 .userlist-element {
     background-color: #efefef;
-    margin-left: 0;
+    margin-left: 0px;
     margin-top: 15px;
     min-width: 300px;
-    min-height: 50px;
-    line-height: 50px; /* center text vertically */
-    font-size: 22px;
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 3px;
+    cursor: pointer;
 }
-
-.user-name {
-    list-style-type: disc;
-    display: list-item; /* bullet/disc */
-    margin-left: 1.56em; /* move bullet */
-    color: initial; /* the link is orange, change back to black*/
-    /* Also good colors: */
-    /*color: darkgreen;*/
-    /*color: steelblue;*/
-    /*color: darkblue;*/
-    /*color: midnightblue;*/
-    /*color: purple;*/
-    /*color: rebeccapurple;*/
-    /*color: dimgray;*/
-    /*color: slategray;*/
+.userlist .admin {
+    background: rgb(212,175,55);
+    background: linear-gradient(145deg, rgba(212,175,55,1) 0%, rgba(239,239,239,1) 10%);
 }
 .user-name {
-    float: left;
+    min-height: 100%;
     width: 400px;
+    font-size: 22px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    overflow: hidden;
+    margin: 0;
+    margin-left: 41px;
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 .user-email {
-    display: inline;
+    min-height: 100%;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
     overflow: hidden;
-    color: initial;
+    margin: 0;
+    padding-left: 1em;
+    padding-right: 0.4em;
+    padding-top: 0;
+    padding-bottom: 0;
     font-style: italic;
 }
-.user-edit-button > button {
-    height: 90%;
-    margin: 10px;
-    font-size: 16px;
-    padding: 10px;
-    float: right;
-    margin-top: 4.2px;
+.user-edit-button {
+    margin: 5px !important;
+    margin-left: auto !important;
 }
 
-/*@media (hover: none) and (pointer: coarse) {*/
+
+
 @media (max-width: 800px) {
-    .user-edit-button {
-        display: flex;
-    }
     .userlist-element {
-        line-height: initial;
+        margin-top: 10px;
+        display: block;
     }
     .user-name {
-        margin-top: 4px;
-        margin-bottom: 4px;
+        display: inline;
+        margin-left: 13px;
+        top: 3px;
+        position: relative;
     }
     .user-email {
+        display: block;
         margin-top: 4px;
-        margin-bottom: 1px;
-        margin-left: 10px;
-        display: inline-block;
     }
 }
+
+
+

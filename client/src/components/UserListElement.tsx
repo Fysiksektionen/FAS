@@ -1,21 +1,19 @@
 import React from 'react';
+import { User } from '../../../shared/types/GroupNode';
 import './UserListElement.css';
 
-import { User } from '../../../shared/types/GroupNode';
+    
 
 const UserListElement: React.FC<User> = (props: User) => {
     return (
-        /* this div is our 'li' list element, but we don't want 'li' properties */
-        <div className="userlist-element">
-            <a href={"/users?id=" + props.id}>
-                <span className="user-name"> {props.name.fullName} </span>
-                <span className="user-email"> {props.email} </span>
-                <span className="user-edit-button"> <button>Edit User</button> </span>
-                
-            </a>
-            
+        <div className={"userlist-element " + (props.isAdmin ? "admin" : "")} onClick={
+            () => window.location.href = "/users/" + props.id
+        }>
+            <div className="user-name"> {props.name.fullName} </div>
+            <div className="user-email"> {props.primaryEmail} </div>
+            <button className="user-edit-button">Edit User</button>
         </div>
     )
 }
 
-export default UserListElement
+export default UserListElement;

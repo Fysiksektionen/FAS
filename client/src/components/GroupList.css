@@ -1,35 +1,11 @@
-/* .groupContainer {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    width:40vw;
-} */
 .grouplist {
     margin: 20px;
 }
-.grouplist input[type=text] {
+.grouplist #searchbar {
     font-size: 20px;
     padding: 4px;
     margin: 0 12px 0 24px;
 }
-
-
-.sort-button {
-    box-shadow: 4px 4px skyblue;
-    background-color: dodgerblue;
-    height: 90%;
-    margin: 10px;
-    font-size: 16px;
-    padding: 10px;
-}
-.sort-button:hover {
-    background: #106FF0;  /*dodgerblue  -  (1e90ff)*/;
-}
-.sort-button:active {
-  box-shadow: 2px 2px skyblue;
-  transform: translate3d(2px, 2px, 0)
-}
-
 
 .checkbox {
     margin: 1.0em;

@@ -7,7 +7,6 @@
     margin: 0 12px 0 24px;
 }
 
-/*@media (hover: none) and (pointer: coarse) {*/
 @media (max-width: 800px) {
     .userlist {
         margin: 16px;

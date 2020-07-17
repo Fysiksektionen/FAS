@@ -1,0 +1,28 @@
+.cross {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    opacity: .8;
+    padding: 5px;
+    margin: 0;
+    cursor: pointer;
+    right: 0px;
+    top: 0px;
+}
+.cross:hover {
+    opacity: 1;
+}
+.cross:before, .cross:after {
+    position: absolute;
+    left: 20px; 
+    content: ' ';
+    height: 33px;
+    width: 2px;
+    background-color :white;
+}
+.cross:before {
+    transform: rotate(45deg);
+}
+.cross:after {
+    transform: rotate(-45deg);
+}

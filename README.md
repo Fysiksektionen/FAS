@@ -1,51 +1,44 @@
 # FAS
-Web-applikation för att administrera sektionens G Suite
+Webbapplikation för administrering av sektionens G Suite.
 
 ![](https://github.com/Fysiksektionen/FAS/workflows/Unittests/badge.svg)
 
-## Utveckling
-
-Börja med att klona repot
-
-`$ git clone https://github.com/Fysiksektionen/FAS.git`
-
-Appen antar att du kör en mongo-databas på `mongodb://localhost:27017/`. Om du inte orkar installera mongodb
- så kan du köra följande kommando för att istället lagra saker i minnet. Detta är bara för att snabbt prototypa och ska inte köras i production.
-
- `$ export FAS_USE_DEV_MEMSTORE=true`
-
-För att installera alla dependencies så kör du 
-
-`npm run install-project`
-
-Sedan kan hela appen köras i development mode (kompileras och uppdateras dynamiskt) genom
-
-`npm run dev`
-
-Kör endast `client/` med `npm run client` och endast `server/` med `npm run server`. 
-
-### Exempel
-
-Se de olika `package.json` filerna för fler tillgängliga scripts.
+## Installation
+Klona ner repot och installera alla dependencies:
 
 ```
 git clone https://github.com/Fysiksektionen/FAS.git
 npm run install-project
+```
 
+## Utveckling
+Appen antar att du kör en Mongo-databas på `mongodb://localhost:27017/`. Om du inte orkar installera mongodb
+så kan du köra följande kommando för att istället lagra saker i minnet (ska ej användas i produktion).
+
+`export FAS_USE_DEV_MEMSTORE=true`
+
+### Dev
+Appen kompileras och uppdateras dynamiskt. React serveras separat på localhost:3000.  
+```
 npm run dev
 ```
 
-### Production
+För fler tillgängliga skript, se de olika `package-json`-filerna.
 
-För att köra production lokalt (med inloggning) så borde du först köra `npm run build-client` för att uppdatera `client/build`.
-Kör sedan följande kommando för att hosta servern med react-frontend på `http://localhost:8080`:
+### Staging
+Kör production lokalt. React byggs separat och servas sedan av backend på `localhost:8080`.
+```
+npm run build-client
+npm run staging
+```
 
-`npm run staging`
+## Production
+Kör production med inloggning mot login.kth.se.
+```
+npm run build-client
+npm run pro
+```
 
-För den faktiska production-miljön med inloggning mot login.kth.se så körs
-
-`npm run pro`
-
-### Tester
+## Tester
 
 Kör testerna med `npm test`. Beroende på vilken mapp du befinner dig i så körs olika tester (närmaste `package.json` bestämmer). Alla tester körs om du är i rot-mappen, annars körs antingen alla `client/` tester eller alla `server/` tester.

@@ -1,4 +1,3 @@
-
 interface CommonGroup {
 	id: string,
 	email: string,
@@ -7,7 +6,6 @@ interface CommonGroup {
 	aliases: string[],
 	nonEditableAliases: string[],
 }
-
 export interface User {
 	id: string,
 	primaryEmail: string,
@@ -21,28 +19,27 @@ export interface User {
 	creationTime: string,
 	orgUnitPath: string,
 }
-
 export interface Member {
 	id: string,
 	email: string,
     role: string,
     delivery_settings: string
 }
-
 export interface Group extends CommonGroup {
 	subGroups: Member[],
 	users: Member[],
 	externalUsers: Member[]
 }
 
-// export interface GroupNodeResponse extends CommonGroup {
-// 	subGroups: string[],
-// 	users: string[],
-// }
+export interface GroupFilled extends CommonGroup {
+	subGroups: GroupFilled[],
+    users: User[],
+    externalUsers: Member[]
+}
 
-export interface GroupNode extends CommonGroup {
-	subGroups: GroupNode[],
-	users: User[],
+export interface DirectoryMap {
+    groups: { [id: string]: Group }
+    users: { [id: string]: User }
 }
 
 export interface TreeItem {

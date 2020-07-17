@@ -1,0 +1,30 @@
+.useredit {
+    display: flex;
+    flex-flow: wrap;
+}
+.useredit-panel {
+    padding: 10px;
+    background: var(--color-font-light);
+    margin: 10px;
+    box-shadow: 0px 0px 4px black;
+}
+.useredit-panel h1 {
+    margin: 7px 0px;
+}
+.useredit td {
+    padding: 1px 20px 1px 0px;
+}
+.useredit #adminlabel {
+    background: rgb(212,175,55);
+    width: fit-content;
+    padding: 2px 5px;
+    margin: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+@media (max-width: 800px) {
+    .useredit {
+        flex-flow: column;
+    }
+}

@@ -1,0 +1,24 @@
+.errorBox {
+    background: red;
+    color: white;
+    box-shadow: 5px 5px black;
+    display: flex;
+    align-items: center;
+    padding: 0px 40px;
+    width: fit-content;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.errorBox p {
+    width: 100%;
+}
+
+.errorBox img {
+    width: 64px;   
+    padding-right: 20px; 
+}
+
+@media screen and (max-width : 700px) {
+    .errorBox {width: auto; }
+}

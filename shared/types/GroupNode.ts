@@ -53,3 +53,14 @@ export interface TreeItem {
 	children?: TreeItem[],
 	_collapsed?: boolean
 };
+
+export interface DirectoryAPIResponse {
+	success: boolean,
+	error?: DirectoryAPIError,
+	reponse?: any // not used right now
+}
+
+interface DirectoryAPIError {
+	error_msg: string, // custom message
+	error: any // google error object
+}

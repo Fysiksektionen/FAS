@@ -3,6 +3,7 @@ import DirectoryApi from './DirectoryApi'
 import auth from '../credentials'
 import {primaryDomain, primaryEmailDomain, secondaryEmailDomains, allDomainsEmail} from '../credentials'
 import { as } from './asyncUtil'
+import { DirectoryAPIResponse } from '../../../shared/types/GroupNode'
 
 
 const directoryApi = new DirectoryApi(primaryDomain, {auth});
@@ -265,12 +266,12 @@ const checkUserPermission = (req: Request) : boolean => {
 
 function sendSuccess(res: Response, response: any)  {
     // Format:  { success: boolean, error?: { ... }, response?: { } }
-    res.json({success: true, response: response});
+    res.json({success: true, response: response} as DirectoryAPIResponse); // cast, just to make sure no spelling error.
 }
 
 function sendError(res: Response, error_msg: string, error_object: any) {
     // Format:  { success: boolean, error?: { ... }, response?: { } }
-    res.json({success: false, error: {error_msg: error_msg, error: error_object} });
+    res.json({success: false, error: {error_msg: error_msg, error: error_object} } as DirectoryAPIResponse);  // cast, just to make sure no spelling error.
 }
 
 

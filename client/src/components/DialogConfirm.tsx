@@ -10,19 +10,18 @@ type Props = {
     }[]
 }
 
-const Dialog: React.FC<Props> = (props: Props) => {
+const DialogConfirm: React.FC<Props> = (props: Props) => {
     return (
         <div className="dialog">
             <div className="dialog-inner">
                 <h2>{props.title}</h2>
                 <p>{props.message}</p>
-                {props.buttons.map(g => <button className="btn-small" 
-                                                onClick={() => g.onClick()}>{g.label}</button>)}
+                {props.buttons.map(g => <button onClick={() => g.onClick()}>{g.label}</button>)}
             </div>
         </div>
     )
 }
 
-export default Dialog;
+export default DialogConfirm;
 
 

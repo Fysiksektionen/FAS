@@ -1,7 +1,8 @@
 import { group } from "console";
 import { Group, Member, User } from "../../../shared/types/GroupNode";
+import {PermsUserFactory, IPermsUserDocument} from "../models/PermsUser";
 
-enum PermsType {
+export enum PermsType {
     ADMIN,
     EDITOR,
     VIEWER,
@@ -72,6 +73,7 @@ class PermsUser {
 }
 
 
+let PermUserModel;
 let PermsUsers: {[username: string] : PermsUser} = {}
 
 
@@ -167,7 +169,19 @@ export const isUserAbleToLogin = (username: string) => {
 
 
 // run at start
-export const initPermissions = () => {
-    // do with mongoose
+export const initPermissions = (mongoose: any) => {
+    
     PermsUsers = {};
+
+    
+
 }
+
+export const createPermsUser = (user_arg : PermsUser) : IPermsUserDocument => {
+    const instance = PermsUserFactory.build({...user_arg});
+    instance.save(function (err, inst) {
+        if (err) return console.error(err);
+    });
+    return instance;
+}
+

@@ -28,7 +28,8 @@ export interface Member {
 export interface Group extends CommonGroup {
 	subGroups: Member[],
 	users: Member[],
-	externalUsers: Member[]
+	externalUsers: Member[],
+	parents?: string[],
 }
 
 export interface GroupFilled extends CommonGroup {
